@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,7 +15,10 @@
   <div class="bg-shape bg-shape-b"></div>
 
   <header class="hero">
-    <p class="eyebrow">Инструкция</p>
+    <div class="hero-top">
+      <p class="eyebrow">Инструкция</p>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему">Светлая тема</button>
+    </div>
     <h1>Роутер с OpenWRT</h1>
     <p class="hero-sub">Компактное руководство для быстрой настройки подключения, Wi-Fi и VPN.</p>
     <a class="hero-btn" href="#toc">Перейти к разделам</a>
@@ -150,5 +153,73 @@
       </article>
     </section>
   </main>
+
+  <div class="image-modal" id="imageModal" aria-hidden="true">
+    <button class="image-modal-close" id="imageModalClose" type="button" aria-label="Закрыть увеличенное изображение">×</button>
+    <img class="image-modal-content" id="imageModalContent" alt="" />
+  </div>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const toggle = document.getElementById("themeToggle");
+      const savedTheme = localStorage.getItem("theme");
+      const preferredDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const initialTheme = savedTheme || (preferredDark ? "dark" : "light");
+
+      function applyTheme(theme) {
+        root.setAttribute("data-theme", theme);
+        toggle.textContent = theme === "dark" ? "Светлая тема" : "Темная тема";
+      }
+
+      applyTheme(initialTheme);
+
+      toggle.addEventListener("click", function () {
+        const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        applyTheme(nextTheme);
+        localStorage.setItem("theme", nextTheme);
+      });
+
+      const modal = document.getElementById("imageModal");
+      const modalImg = document.getElementById("imageModalContent");
+      const modalClose = document.getElementById("imageModalClose");
+      const galleryImages = document.querySelectorAll(".gallery img");
+
+      function openModal(img) {
+        modalImg.src = img.src;
+        modalImg.alt = img.alt || "Увеличенное изображение";
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+      }
+
+      function closeModal() {
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        modalImg.src = "";
+        document.body.classList.remove("modal-open");
+      }
+
+      galleryImages.forEach(function (img) {
+        img.classList.add("zoomable");
+        img.tabIndex = 0;
+        img.addEventListener("click", function () { openModal(img); });
+        img.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openModal(img);
+          }
+        });
+      });
+
+      modalClose.addEventListener("click", closeModal);
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+      });
+    }());
+  </script>
 </body>
 </html>
