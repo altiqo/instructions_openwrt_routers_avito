@@ -173,7 +173,9 @@ h1 {
 .hero-btn:focus-visible,
 .toc a:focus-visible,
 .zoomable:focus-visible,
-.image-modal-close:focus-visible {
+.image-modal-close:focus-visible,
+.review-popup__close:focus-visible,
+.review-popup__cta:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -339,6 +341,85 @@ a:hover { color: var(--accent-2); }
   display: flex;
 }
 
+.review-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(2, 6, 12, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.review-popup.is-open {
+  display: flex;
+}
+
+.review-popup__dialog {
+  width: min(560px, 100%);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 18px;
+  position: relative;
+  animation: pop .18s ease-out;
+}
+
+.review-popup__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.review-popup__image {
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.review-popup__title {
+  margin: 14px 0 8px;
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.review-popup__text {
+  margin: 0 0 14px;
+  color: var(--muted);
+}
+
+.review-popup__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  width: 100%;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 800;
+  color: #06111d;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+[data-theme="light"] .review-popup__cta {
+  color: #ffffff;
+}
+
 .image-modal-content {
   max-width: min(94vw, 1480px);
   max-height: 88vh;
@@ -373,6 +454,10 @@ a:hover { color: var(--accent-2); }
 }
 
 body.modal-open {
+  overflow: hidden;
+}
+
+body.review-popup-open {
   overflow: hidden;
 }
 
@@ -508,6 +593,23 @@ body.modal-open {
     width: 36px;
     height: 36px;
     font-size: 24px;
+  }
+
+  .review-popup {
+    padding: 12px;
+  }
+
+  .review-popup__dialog {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  .review-popup__image {
+    max-height: 170px;
+  }
+
+  .review-popup__title {
+    font-size: 1.1rem;
   }
 }
 

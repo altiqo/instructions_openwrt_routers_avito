@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="520" viewBox="0 0 1080 520" role="img" aria-labelledby="title desc">
+  <title id="title">Рейтинг Авито</title>
+  <desc id="desc">Изображение рейтинга 5,0 и блока опубликованных отзывов.</desc>
+  <rect width="1080" height="520" fill="#ececec"/>
+  <text x="62" y="84" font-family="Arial, sans-serif" font-size="64" font-weight="700" fill="#000000">Рейтинг</text>
+  <text x="62" y="228" font-family="Arial, sans-serif" font-size="110" font-weight="700" fill="#000000">5,0</text>
+  <text x="238" y="205" font-family="Arial, sans-serif" font-size="68" font-weight="700" fill="#f3ab20">★★★★★</text>
+  <text x="238" y="254" font-family="Arial, sans-serif" font-size="40" fill="#6f6f6f">на основании 11 оценок</text>
+
+  <text x="62" y="324" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#f3ab20">★★★★★</text>
+  <rect x="244" y="297" width="690" height="8" rx="4" fill="#6f6f6f"/>
+  <text x="955" y="316" font-family="Arial, sans-serif" font-size="38" fill="#000000">11</text>
+
+  <text x="62" y="370" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#f3ab20">★★★★</text>
+  <text x="196" y="370" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#d1d1d1">★</text>
+  <rect x="244" y="343" width="690" height="8" rx="4" fill="#c8c8c8"/>
+  <text x="955" y="362" font-family="Arial, sans-serif" font-size="38" fill="#000000">0</text>
+
+  <text x="62" y="416" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#f3ab20">★★★</text>
+  <text x="169" y="416" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#d1d1d1">★★</text>
+  <rect x="244" y="389" width="690" height="8" rx="4" fill="#c8c8c8"/>
+  <text x="955" y="408" font-family="Arial, sans-serif" font-size="38" fill="#000000">0</text>
+
+  <text x="62" y="462" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#f3ab20">★★</text>
+  <text x="140" y="462" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#d1d1d1">★★★</text>
+  <rect x="244" y="435" width="690" height="8" rx="4" fill="#c8c8c8"/>
+  <text x="955" y="454" font-family="Arial, sans-serif" font-size="38" fill="#000000">0</text>
+
+  <text x="62" y="508" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#f3ab20">★</text>
+  <text x="106" y="508" font-family="Arial, sans-serif" font-size="44" font-weight="700" fill="#d1d1d1">★★★★</text>
+  <rect x="244" y="481" width="690" height="8" rx="4" fill="#c8c8c8"/>
+  <text x="955" y="500" font-family="Arial, sans-serif" font-size="38" fill="#000000">0</text>
+</svg>

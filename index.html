@@ -154,6 +154,27 @@
     </section>
   </main>
 
+  <div class="review-popup" id="reviewPopup" aria-hidden="true">
+    <div class="review-popup__dialog" role="dialog" aria-modal="true" aria-labelledby="reviewPopupTitle">
+      <button class="review-popup__close" id="reviewPopupClose" type="button" aria-label="Закрыть окно отзыва">×</button>
+      <img
+        class="review-popup__image"
+        src="assets/images/avito-review.svg"
+        alt="Рейтинг и отзывы Авито"
+        loading="lazy"
+      />
+      <h3 class="review-popup__title" id="reviewPopupTitle">Оставьте отзыв</h3>
+      <p class="review-popup__text">Вам понравился товар, помощь в настройке и все работает? Буду рад, если Вы оставите хороший отзыв на Авито.</p>
+      <a
+        class="review-popup__cta"
+        id="reviewPopupCta"
+        href="https://www.avito.ru/user/review?fid=2_OgIbTjf5vuM9OL93PlDXQOjowHx4ZBZ87DElF8B0nlyL6RdaaYzvyPSWRjp4ZyNE"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Оставить отзыв</a>
+    </div>
+  </div>
+
   <div class="image-modal" id="imageModal" aria-hidden="true">
     <button class="image-modal-close" id="imageModalClose" type="button" aria-label="Закрыть увеличенное изображение">×</button>
     <img class="image-modal-content" id="imageModalContent" alt="" />
@@ -218,6 +239,67 @@
       });
       document.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+      });
+
+      const reviewPopup = document.getElementById("reviewPopup");
+      const reviewPopupClose = document.getElementById("reviewPopupClose");
+      const reviewPopupCta = document.getElementById("reviewPopupCta");
+      const reviewPopupImage = reviewPopup.querySelector(".review-popup__image");
+      const reviewPopupStorageKey = "reviewPopupDismissed";
+      let reviewPopupShown = false;
+
+      function markReviewPopupDismissed() {
+        localStorage.setItem(reviewPopupStorageKey, "1");
+      }
+
+      function openReviewPopup() {
+        if (reviewPopupShown) return;
+        reviewPopupShown = true;
+        reviewPopup.classList.add("is-open");
+        reviewPopup.setAttribute("aria-hidden", "false");
+        document.body.classList.add("review-popup-open");
+      }
+
+      function closeReviewPopup(markAsDismissed) {
+        reviewPopup.classList.remove("is-open");
+        reviewPopup.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("review-popup-open");
+        if (markAsDismissed) markReviewPopupDismissed();
+      }
+
+      if (reviewPopupImage) {
+        reviewPopupImage.addEventListener("error", function () {
+          reviewPopupImage.style.display = "none";
+        });
+      }
+
+      if (!localStorage.getItem(reviewPopupStorageKey)) {
+        function onScrollReviewPopup() {
+          if (window.scrollY >= window.innerHeight * 1.2) {
+            openReviewPopup();
+            window.removeEventListener("scroll", onScrollReviewPopup);
+          }
+        }
+
+        window.addEventListener("scroll", onScrollReviewPopup, { passive: true });
+      }
+
+      reviewPopupClose.addEventListener("click", function () {
+        closeReviewPopup(true);
+      });
+
+      reviewPopup.addEventListener("click", function (e) {
+        if (e.target === reviewPopup) closeReviewPopup(true);
+      });
+
+      reviewPopupCta.addEventListener("click", function () {
+        closeReviewPopup(true);
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && reviewPopup.classList.contains("is-open")) {
+          closeReviewPopup(true);
+        }
       });
     }());
   </script>
