@@ -147,6 +147,23 @@ h1 {
   color: #ffffff;
 }
 
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hero-btn--secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+[data-theme="light"] .hero-btn--secondary {
+  color: var(--text);
+}
+
 .theme-toggle {
   border: 1px solid color-mix(in srgb, var(--line) 78%, #ffffff 22%);
   color: var(--text);
@@ -525,6 +542,11 @@ body.review-popup-open {
     width: 100%;
     text-align: center;
     padding: 12px 14px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .card {

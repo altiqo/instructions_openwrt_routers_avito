@@ -21,7 +21,21 @@
     </div>
     <h1>Роутер с OpenWRT</h1>
     <p class="hero-sub">Компактное руководство для быстрой настройки подключения, Wi-Fi и VPN.</p>
-    <a class="hero-btn" href="#toc">Перейти к разделам</a>
+    <div class="hero-actions">
+      <a class="hero-btn" href="#toc">Перейти к разделам</a>
+      <a
+        class="hero-btn hero-btn--secondary"
+        href="https://www.avito.ru/user/review?fid=2_OgIbTjf5vuM9OL93PlDXQOjowHx4ZBZ87DElF8B0nlyL6RdaaYzvyPSWRjp4ZyNE"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Оставить отзыв</a>
+      <a
+        class="hero-btn hero-btn--secondary"
+        href="https://altiqo.github.io/openwrt-router-compare/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Сравнительная таблица</a>
+    </div>
   </header>
 
   <main class="layout">
@@ -245,26 +259,20 @@
       const reviewPopupClose = document.getElementById("reviewPopupClose");
       const reviewPopupCta = document.getElementById("reviewPopupCta");
       const reviewPopupImage = reviewPopup.querySelector(".review-popup__image");
-      const reviewPopupStorageKey = "reviewPopupDismissed";
-      let reviewPopupShown = false;
-
-      function markReviewPopupDismissed() {
-        localStorage.setItem(reviewPopupStorageKey, "1");
-      }
+      let reviewPopupHandled = false;
 
       function openReviewPopup() {
-        if (reviewPopupShown) return;
-        reviewPopupShown = true;
+        if (reviewPopupHandled) return;
+        reviewPopupHandled = true;
         reviewPopup.classList.add("is-open");
         reviewPopup.setAttribute("aria-hidden", "false");
         document.body.classList.add("review-popup-open");
       }
 
-      function closeReviewPopup(markAsDismissed) {
+      function closeReviewPopup() {
         reviewPopup.classList.remove("is-open");
         reviewPopup.setAttribute("aria-hidden", "true");
         document.body.classList.remove("review-popup-open");
-        if (markAsDismissed) markReviewPopupDismissed();
       }
 
       if (reviewPopupImage) {
@@ -273,32 +281,31 @@
         });
       }
 
-      if (!localStorage.getItem(reviewPopupStorageKey)) {
-        function onScrollReviewPopup() {
-          if (window.scrollY >= window.innerHeight * 1.2) {
-            openReviewPopup();
-            window.removeEventListener("scroll", onScrollReviewPopup);
-          }
+      function onScrollReviewPopup() {
+        if (reviewPopupHandled) return;
+        if (window.scrollY >= window.innerHeight * 0.85) {
+          openReviewPopup();
+          window.removeEventListener("scroll", onScrollReviewPopup);
         }
-
-        window.addEventListener("scroll", onScrollReviewPopup, { passive: true });
       }
+      window.addEventListener("scroll", onScrollReviewPopup, { passive: true });
+      onScrollReviewPopup();
 
       reviewPopupClose.addEventListener("click", function () {
-        closeReviewPopup(true);
+        closeReviewPopup();
       });
 
       reviewPopup.addEventListener("click", function (e) {
-        if (e.target === reviewPopup) closeReviewPopup(true);
+        if (e.target === reviewPopup) closeReviewPopup();
       });
 
       reviewPopupCta.addEventListener("click", function () {
-        closeReviewPopup(true);
+        closeReviewPopup();
       });
 
       document.addEventListener("keydown", function (e) {
         if (e.key === "Escape" && reviewPopup.classList.contains("is-open")) {
-          closeReviewPopup(true);
+          closeReviewPopup();
         }
       });
     }());
