@@ -38,6 +38,7 @@
       <a class="hero-btn" href="#toc">Перейти к разделам</a>
       <a
         class="hero-btn hero-btn--secondary"
+        data-review-link
         href="https://www.avito.ru/user/review?fid=2_OgIbTjf5vuM9OL93PlDXQOjowHx4ZBZ87DElF8B0nlyL6RdaaYzvyPSWRjp4ZyNE"
         target="_blank"
         rel="noopener noreferrer"
@@ -233,6 +234,7 @@
       <a
         class="review-popup__cta"
         id="reviewPopupCta"
+        data-review-link
         href="https://www.avito.ru/user/review?fid=2_OgIbTjf5vuM9OL93PlDXQOjowHx4ZBZ87DElF8B0nlyL6RdaaYzvyPSWRjp4ZyNE"
         target="_blank"
         rel="noopener noreferrer"
@@ -245,8 +247,10 @@
     <img class="image-modal-content" id="imageModalContent" alt="" />
   </div>
 
+  <script src="config.js"></script>
   <script>
     (function () {
+      const appConfig = window.APP_CONFIG || {};
       const root = document.documentElement;
       const toggle = document.getElementById("themeToggle");
       const savedTheme = localStorage.getItem("theme");
@@ -264,6 +268,19 @@
         const nextTheme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
         applyTheme(nextTheme);
         localStorage.setItem("theme", nextTheme);
+      });
+
+      const reviewConfig = appConfig.reviewLinks || {};
+      const defaultReviewUrl = reviewConfig.default || "https://www.avito.ru/user/review?fid=2_OgIbTjf5vuM9OL93PlDXQOjowHx4ZBZ87DElF8B0nlyL6RdaaYzvyPSWRjp4ZyNE";
+      const reviewOverrides = Array.isArray(reviewConfig.overrides) ? reviewConfig.overrides : [];
+      const searchParams = new URLSearchParams(window.location.search);
+      const reviewLinks = document.querySelectorAll("[data-review-link]");
+      const matchedReviewOverride = reviewOverrides.find(function (override) {
+        return override && searchParams.get("utm_source") === override.utmSource && override.url;
+      });
+
+      reviewLinks.forEach(function (link) {
+        link.href = matchedReviewOverride ? matchedReviewOverride.url : defaultReviewUrl;
       });
 
       const modal = document.getElementById("imageModal");
