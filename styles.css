@@ -248,6 +248,18 @@ h1 {
   background: #fff;
 }
 
+.toc a.toc-link-important {
+  border-color: color-mix(in srgb, var(--accent-2) 42%, var(--line) 58%);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-2) 22%, transparent), color-mix(in srgb, var(--accent) 16%, transparent));
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(80, 169, 255, 0.14);
+}
+
+.toc a.toc-link-important:hover {
+  border-color: var(--accent-2);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent-2) 28%, transparent), color-mix(in srgb, var(--accent) 20%, transparent));
+}
+
 .content {
   display: grid;
   gap: 18px;
