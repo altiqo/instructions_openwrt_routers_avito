@@ -66,6 +66,8 @@
         <a href="#some-vless-vpn">Несколько конфигураций VLESS VPN</a>
         <a href="#amnezia" class="toc-link-important">Перестал работать YouTube, Instagram и другие сайты в блоке</a>
         <a href="#xbox-dns">DNS для Xbox</a>
+        <a href="#full-vpn">Как пустить весь трафик через VPN?</a>
+        <a href="#wi-fi-problem">Устройство не видит Wi-Fi (2G / 5G)</a>
       </nav>
     </aside>
 
@@ -191,10 +193,11 @@
       <article class="card" id="amnezia">
         <h2>Перестал работать YouTube, Instagram и другие сайты в блоке</h2>
         <div class="info-note">
-          <p>В случае, если у пропал доступ к сайтам YouTube, Instagram и другим заблокированным РКН, вам нужно попробовать обновить конфиг AmneziaVPN. Как это сделать ниже.</p>
+          <p>В случае, если у вас пропал доступ к сайтам YouTube, Instagram и другим заблокированным РКН, вам нужно попробовать обновить конфиг AmneziaVPN. Как это сделать ниже.</p>
+          <p>В дигностике podkop первая секция main, где используется Amnezia, горит красным.</p>
         </div>
         <ol>
-          <li>Скачайте любой WARP-конфиг: <a href="https://warp-generator.github.io/warp/" target="_blank" rel="noopener noreferrer">warp-generator.github.io/warp</a>.</li>
+          <li>Скачайте Amnezia WG конфиг: <a href="https://warp-generator.github.io/warp/" target="_blank" rel="noopener noreferrer">warp-generator.github.io/warp</a>.</li>
           <li>Перейдите в <strong>Сеть → Интерфейсы → AmneziaWG</strong> и нажмите «Изменить».</li>
           <li>Импортируйте содержимое скачанного конфигурационного файла.</li>
           <li>Нажмите «Импорт настроек» и примените изменения.</li>
@@ -220,8 +223,47 @@
           <figure><img src="assets/images/image28.png" alt="Прописываем пользовательские DNS" loading="lazy" /></figure>
         </div>
       </article>
+
+        <article class="card" id="full-vpn">
+        <h2>Как пустить весь трафик через VPN?</h2>
+        <div class="info-note">
+          <p>Это может быть полезно, когда вам нужно обойти проблему подключения на каком-то устройстве, но вы не знаете какой домен нужно прописать в podkop. Например, пустить весь трафик PlayStation через VPN, чтобы получить доступ к игре. Либо у вас возникает ошибка подключения умного устройства в приложении из-за блокировок.</p>
+        </div>
+        <ol>
+          <li>Заходим на главную страницу админки, смотрим подключенные устройства. Чтобы понять какой локальный ip у устройства, пытаемся его отключить и подключить, обращая внимания на изменения в таблице устройств.</li>
+          <li>На нужном устройстве жмем<strong>«Закрепить IP»</strong>.</li>
+          <li>Идем в <strong>Службы → Podkop → Секции</strong>.</li>
+          <li>Ищем пункт <strong>«Полностью маршрутизированные IP-адреса»</strong> в секции нужного нам VPN и добавляем туда локальный ip адрес устройства, который мы закрепили в прошлых пунктах</li>
+          <li>Теперь весь трафик этого устройства будет идти через VPN. В альтернативном варианте, вам нужно определить точные домены и прописать их в «Пользователських списках».</li>
+        </ol>
+        <div class="gallery">
+          <figure><img src="assets/images/image29.png" alt="Интерфейс AmneziaWG в OpenWRT" loading="lazy" /></figure>
+          <figure><img src="assets/images/image30.png" alt="Импорт конфигурации AmneziaWG" loading="lazy" /></figure>
+        </div>
+      </article>
+
+          <article class="card" id="wi-fi-problem">
+        <h2>Как пустить весь трафик через VPN?</h2>
+        <div class="info-note">
+          <p>Проблема может быть из-за того, что у 2g или 5g сети стоит <strong>auto</strong> режим выставления каналы работы. При таком режиме может выставиться самый свободный канал, котоый не видит телевизор, телефон и так далее.</p>
+        </div>
+        <ol>
+          <li>Идем в раздел <strong>Сеть → Беспроводная сеть</strong>.</li>
+          <li>Нажимаем изменить на 2G или 5G сети.</li>
+          <li>Проверяем что стоит в пункте<strong>«Настройка частоты»</strong>. Ставим самый первый доступный канал вместо <strong>auto</strong>, например, 1 или 40. Ширину ставим 20 или 40. </li>
+          <li>Здесь же можно поэкспериментировать с частотой, мощностью, шириной канала. Проверяете все настройки и оставляете те, с которыми у вас самая высокая скорость передачи в сети.</li>
+        </ol>
+        <div class="gallery">
+          <figure><img src="assets/images/image31.png" alt="Интерфейс AmneziaWG в OpenWRT" loading="lazy" /></figure>
+          <figure><img src="assets/images/image32.png" alt="Импорт конфигурации AmneziaWG" loading="lazy" /></figure>
+        </div>
+      </article>
+
     </section>
   </main>
+
+
+      
 
   <div class="review-popup" id="reviewPopup" aria-hidden="true">
     <div class="review-popup__dialog" role="dialog" aria-modal="true" aria-labelledby="reviewPopupTitle">
