@@ -209,8 +209,8 @@ h1 {
 .toc-search input:focus-visible,
 .toc-search__clear:focus-visible,
 .section-like:focus-visible,
-.sticky-cta__link:focus-visible,
 .telegram-widget:focus-visible,
+.avito-widget:focus-visible,
 .copy-chip button:focus-visible,
 .copy-block button:focus-visible,
 summary:focus-visible,
@@ -498,58 +498,17 @@ details p {
   font: inherit;
 }
 
-.sticky-cta {
-  position: fixed;
-  z-index: 35;
-  left: 50%;
-  bottom: 18px;
-  display: flex;
-  gap: 8px;
-  padding: 8px;
-  border: 1px solid color-mix(in srgb, var(--line) 78%, #ffffff 22%);
-  border-radius: 18px;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(16px);
-  transform: translateX(-50%);
-}
-
-.sticky-cta__link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  padding: 10px 14px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 800;
-  white-space: nowrap;
-  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
-  transition: transform .18s ease, border-color .18s ease, background .18s ease;
-}
-
-.sticky-cta__link:hover {
-  transform: translateY(-1px);
-  border-color: var(--accent-2);
-}
-
-.sticky-cta__link--primary {
-  color: #06111d;
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-}
-
-[data-theme="light"] .sticky-cta__link--primary {
-  color: #ffffff;
-}
-
-.telegram-widget {
+.floating-contact {
   position: fixed;
   z-index: 36;
   right: 18px;
   bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.telegram-widget {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -575,6 +534,30 @@ details p {
   height: 24px;
   fill: currentColor;
   flex: 0 0 auto;
+}
+
+.avito-widget {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid color-mix(in srgb, var(--line) 76%, #ffffff 24%);
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(21, 39, 70, 0.22);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.avito-widget:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, #97cf1a 58%, var(--line) 42%);
+  box-shadow: 0 20px 44px rgba(21, 39, 70, 0.28);
+}
+
+.avito-widget img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
 }
 
 ol {
@@ -988,23 +971,13 @@ body.review-popup-open {
     gap: 8px;
   }
 
-  .sticky-cta {
-    left: 12px;
+  .floating-contact {
     right: 12px;
     bottom: 12px;
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
-    transform: none;
   }
 
-  .sticky-cta__link {
-    min-width: 0;
-    padding: 10px 12px;
-  }
-
-  .telegram-widget {
-    right: 12px;
-    bottom: 86px;
+  .telegram-widget,
+  .avito-widget {
     width: 54px;
     height: 54px;
     justify-content: center;
@@ -1124,7 +1097,7 @@ body.review-popup-open {
   .layout {
     padding-left: 12px;
     padding-right: 12px;
-    padding-bottom: 176px;
+    padding-bottom: 112px;
   }
 
   .hero {
@@ -1141,12 +1114,8 @@ body.review-popup-open {
     grid-template-columns: 1fr;
   }
 
-  .sticky-cta {
-    grid-template-columns: 1fr;
-  }
-
-  .telegram-widget {
-    bottom: 138px;
+  .floating-contact {
+    bottom: 12px;
   }
 }
 
@@ -1188,8 +1157,9 @@ body.review-popup-open {
   .hero-actions,
   .theme-toggle,
   .section-like,
-  .sticky-cta,
   .telegram-widget,
+  .avito-widget,
+  .floating-contact,
   .review-popup,
   .image-modal,
   .feedback-card,
