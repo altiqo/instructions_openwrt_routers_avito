@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Инструкция OpenWrt</title>
+  <desc id="desc">Превью инструкции по настройке OpenWrt, Wi-Fi, VPN, podkop и AmneziaWG.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080b12"/>
+      <stop offset="0.55" stop-color="#101827"/>
+      <stop offset="1" stop-color="#071d1d"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#61f2c2"/>
+      <stop offset="1" stop-color="#69b5ff"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="28" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.38 0 0 0 0 0.95 0 0 0 0 0.76 0 0 0 0.55 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1010" cy="86" r="190" fill="#69b5ff" opacity="0.24" filter="url(#glow)"/>
+  <circle cx="150" cy="560" r="220" fill="#61f2c2" opacity="0.18" filter="url(#glow)"/>
+  <rect x="72" y="72" width="1056" height="486" rx="42" fill="#11151e" opacity="0.82" stroke="#2a3447" stroke-width="2"/>
+  <text x="112" y="146" font-family="Manrope, Arial, sans-serif" font-size="30" font-weight="800" letter-spacing="5" fill="#61f2c2">ИНСТРУКЦИЯ</text>
+  <text x="112" y="260" font-family="Manrope, Arial, sans-serif" font-size="86" font-weight="800" fill="#f2f6ff">OpenWrt роутер</text>
+  <text x="112" y="338" font-family="Manrope, Arial, sans-serif" font-size="42" font-weight="700" fill="#bac4da">Wi‑Fi, VPN, podkop и AmneziaWG</text>
+  <rect x="112" y="394" width="206" height="58" rx="18" fill="url(#accent)"/>
+  <text x="145" y="433" font-family="Manrope, Arial, sans-serif" font-size="25" font-weight="800" fill="#06111d">192.168.1.1</text>
+  <rect x="340" y="394" width="144" height="58" rx="18" fill="#161b26" stroke="#2a3447"/>
+  <text x="369" y="433" font-family="Manrope, Arial, sans-serif" font-size="25" font-weight="800" fill="#f2f6ff">PPPoE</text>
+  <rect x="506" y="394" width="112" height="58" rx="18" fill="#161b26" stroke="#2a3447"/>
+  <text x="535" y="433" font-family="Manrope, Arial, sans-serif" font-size="25" font-weight="800" fill="#f2f6ff">DNS</text>
+  <rect x="640" y="394" width="130" height="58" rx="18" fill="#161b26" stroke="#2a3447"/>
+  <text x="670" y="433" font-family="Manrope, Arial, sans-serif" font-size="25" font-weight="800" fill="#f2f6ff">Xbox</text>
+  <path d="M911 178h94c31 0 56 25 56 56v94c0 31-25 56-56 56h-94c-31 0-56-25-56-56v-94c0-31 25-56 56-56Z" fill="#0a0f18" stroke="#2a3447" stroke-width="3"/>
+  <path d="M904 286h108M958 232v108" stroke="url(#accent)" stroke-width="18" stroke-linecap="round"/>
+  <path d="M889 419h138" stroke="#61f2c2" stroke-width="12" stroke-linecap="round" opacity="0.72"/>
+</svg>

@@ -3,8 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenWRT Router Guide</title>
-  <meta name="description" content="Пошаговая инструкция по настройке роутера с OpenWRT: подключение, интернет, Wi‑Fi, обход доменов и VPN." />
+  <title>Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG</title>
+  <meta name="description" content="Пошаговая инструкция по настройке роутера с OpenWrt: вход в админку, интернет, Wi‑Fi, podkop, AmneziaWG, DNS для Xbox и VPN." />
+  <meta property="og:title" content="Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG" />
+  <meta property="og:description" content="Пошаговая настройка роутера OpenWrt: вход в админку, интернет, Wi‑Fi, VPN, podkop, AmneziaWG и DNS для Xbox." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:url" content="https://altiqo.github.io/instructions_openwrt_routers_avito/" />
+  <meta property="og:image" content="https://altiqo.github.io/instructions_openwrt_routers_avito/assets/images/og-openwrt-guide.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG" />
+  <meta name="twitter:description" content="Пошаговая настройка роутера OpenWrt: вход в админку, интернет, Wi‑Fi, VPN, podkop, AmneziaWG и DNS для Xbox." />
+  <meta name="twitter:image" content="https://altiqo.github.io/instructions_openwrt_routers_avito/assets/images/og-openwrt-guide.png" />
+  <meta name="twitter:image:alt" content="Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -22,6 +36,85 @@
   </script>
   <noscript><div><img src="https://mc.yandex.ru/watch/107092919" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
   <!-- /Yandex.Metrika counter -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": "https://altiqo.github.io/instructions_openwrt_routers_avito/#webpage",
+          "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/",
+          "name": "Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG",
+          "description": "Пошаговая инструкция по настройке роутера с OpenWrt: вход в админку, интернет, Wi‑Fi, podkop, AmneziaWG, DNS для Xbox и VPN.",
+          "inLanguage": "ru-RU",
+          "image": "https://altiqo.github.io/instructions_openwrt_routers_avito/assets/images/og-openwrt-guide.png"
+        },
+        {
+          "@type": "HowTo",
+          "@id": "https://altiqo.github.io/instructions_openwrt_routers_avito/#howto",
+          "name": "Как настроить роутер с OpenWrt",
+          "description": "Инструкция по базовой настройке OpenWrt, Wi‑Fi, VPN, podkop, AmneziaWG и DNS для Xbox.",
+          "inLanguage": "ru-RU",
+          "totalTime": "PT30M",
+          "step": [
+            { "@type": "HowToStep", "name": "Подготовиться к настройке", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#before-start", "text": "Подготовьте кабель провайдера, устройство для подключения и данные PPPoE, если они нужны." },
+            { "@type": "HowToStep", "name": "Войти в админку", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#admin", "text": "Откройте http://192.168.1.1 и войдите под root с паролем 12345678." },
+            { "@type": "HowToStep", "name": "Настроить подключение", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#conn", "text": "Выберите тип подключения WAN и введите данные провайдера при PPPoE." },
+            { "@type": "HowToStep", "name": "Настроить Wi‑Fi", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#wifi", "text": "Измените имя сети и пароль для 2.4G и 5G сетей." },
+            { "@type": "HowToStep", "name": "Настроить обход и VPN", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#bypass", "text": "Добавьте домены в podkop или настройте собственный VPN." },
+            { "@type": "HowToStep", "name": "Проверить частые проблемы", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#faq", "text": "Используйте FAQ и блоки проверки, если подключение, Wi‑Fi или VPN не заработали." }
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://altiqo.github.io/instructions_openwrt_routers_avito/#faqpage",
+          "inLanguage": "ru-RU",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Не открывается 192.168.1.1",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Проверьте подключение к роутеру по LAN или Wi‑Fi, отключите VPN на устройстве и попробуйте открыть http://192.168.1.1 в другом браузере."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Что такое WAN и LAN",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "WAN — порт для кабеля провайдера. LAN — порт для подключения компьютера, телевизора или другого устройства внутри вашей сети."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Где взять PPPoE логин и пароль",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Обычно данные PPPoE указаны в договоре с провайдером, личном кабинете или выдаются службой поддержки."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Почему устройство не видит Wi‑Fi",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Чаще всего помогает заменить auto-канал на фиксированный канал, проверить диапазон 2.4G/5G и применить настройки."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Что делать, если VPN не заработал",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Проверьте корректность конфигурации, примените настройки, перезапустите podkop или VPN-сервис и посмотрите диагностику."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  </script>
 </head>
 <body>
   <div class="bg-shape bg-shape-a"></div>
@@ -32,8 +125,8 @@
       <p class="eyebrow">Инструкция</p>
       <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему">Светлая тема</button>
     </div>
-    <h1>Роутер с OpenWRT</h1>
-    <p class="hero-sub">Компактное руководство для быстрой настройки подключения, Wi-Fi и VPN.</p>
+    <h1>Роутер с OpenWrt</h1>
+    <p class="hero-sub">Компактное руководство для быстрой настройки подключения, Wi‑Fi и VPN.</p>
     <div class="hero-actions">
       <a class="hero-btn" href="#toc">Перейти к разделам</a>
       <a
@@ -55,34 +148,75 @@
   <main class="layout">
     <aside class="toc" id="toc">
       <h2>Оглавление</h2>
-      <nav>
-        <a href="#admin">Вход в админку</a>
-        <a href="#conn">Смена типа подключения</a>
-        <a href="#dhcp">DHCP и страница логина</a>
-        <a href="#wifi">Имя и пароль Wi‑Fi</a>
-        <a href="#bypass">Добавить сайт в обход</a>
-        <a href="#adguard">Перезапуск AdguardVPN</a>
-        <a href="#custom-vpn">Свой VPN</a>
-        <a href="#some-vless-vpn">Несколько конфигураций VLESS VPN</a>
-        <a href="#amnezia" class="toc-link-important">Перестал работать YouTube, Instagram и другие сайты в блоке</a>
-        <a href="#xbox-dns">DNS для Xbox</a>
-        <a href="#full-vpn">Как пустить весь трафик через VPN?</a>
-        <a href="#wi-fi-problem">Устройство не видит Wi-Fi (2G / 5G)</a>
+      <div class="toc-search">
+        <label for="tocSearch">Поиск по инструкции</label>
+        <div class="toc-search__row">
+          <input id="tocSearch" type="search" placeholder="Wi‑Fi, Xbox, VPN, PPPoE" autocomplete="off" />
+          <button class="toc-search__clear" id="tocSearchClear" type="button" hidden>Сброс</button>
+        </div>
+        <p class="toc-search__empty" id="tocSearchEmpty" hidden>Ничего не найдено</p>
+      </div>
+      <nav id="tocNav">
+        <a href="#before-start" data-keywords="старт начало подготовка pppoe dhcp логин пароль">Перед началом</a>
+        <a href="#admin" data-keywords="192.168.1.1 админка root пароль вход">Вход в админку</a>
+        <a href="#conn" data-keywords="wan pppoe dhcp провайдер интернет подключение">Смена типа подключения</a>
+        <a href="#dhcp" data-keywords="dhcp mac провайдер логин страница">DHCP и страница логина</a>
+        <a href="#wifi" data-keywords="wifi wi-fi вайфай беспроводная сеть ssid пароль 2g 5g">Имя и пароль Wi‑Fi</a>
+        <a href="#bypass" data-keywords="podkop домены обход сайт список">Добавить сайт в обход</a>
+        <a href="#adguard" data-keywords="adguard vpn ssh команда перезапуск">Перезапуск AdGuard VPN</a>
+        <a href="#custom-vpn" data-keywords="vpn vless proxy podkop свой">Свой VPN</a>
+        <a href="#some-vless-vpn" data-keywords="vless urltest selector несколько конфигураций vpn">Несколько конфигураций VLESS VPN</a>
+        <a href="#amnezia" class="toc-link-important" data-keywords="amneziawg amnezia youtube instagram ркн warp">Перестал работать YouTube, Instagram и другие сайты в блоке</a>
+        <a href="#xbox-dns" data-keywords="xbox dns udp ipv4 bootstrap">DNS для Xbox</a>
+        <a href="#full-vpn" data-keywords="весь трафик vpn ip устройство playstation маршрутизация">Как пустить весь трафик через VPN?</a>
+        <a href="#wi-fi-problem" data-keywords="wifi wi-fi вайфай не видит канал auto 2g 5g">Устройство не видит Wi‑Fi (2G / 5G)</a>
+        <a href="#faq" data-keywords="faq вопросы не открывается wan lan pppoe vpn">FAQ</a>
       </nav>
     </aside>
 
     <section class="content">
+      <article class="card intro-card" id="before-start">
+        <h2>Перед началом</h2>
+        <p>Подготовьте кабель провайдера, устройство для подключения к роутеру и данные от провайдера, если у вас используется PPPoE.</p>
+        <ul>
+          <li>Адрес админки: <span class="copy-chip"><code>http://192.168.1.1</code><button type="button" data-copy-value="http://192.168.1.1">Скопировать</button></span>.</li>
+          <li>Логин: <code>root</code>, пароль: <code>12345678</code>.</li>
+          <li>Если интернет работает через DHCP, логин и пароль провайдера обычно не нужны.</li>
+          <li>Если интернет работает через PPPoE, заранее найдите логин и пароль из договора или личного кабинета провайдера.</li>
+        </ul>
+      </article>
+
       <article class="card" id="admin">
         <h2>Вход в админку для первого подключения</h2>
         <ol>
           <li>Подключите кабель провайдера в <strong>WAN</strong> порт роутера.</li>
           <li>При необходимости подключите устройство по <strong>LAN</strong> кабелю (например, в порт <strong>LAN1</strong>).</li>
-          <li>Откройте в браузере <code>http://192.168.1.1</code>.</li>
+          <li>Откройте в браузере <span class="copy-chip"><code>http://192.168.1.1</code><button type="button" data-copy-value="http://192.168.1.1">Скопировать</button></span>.</li>
           <li>Логин: <code>root</code>, пароль: <code>12345678</code>.</li>
         </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Проверьте, что кабель провайдера подключен именно в WAN, а компьютер — в LAN.</li>
+            <li>Отключите VPN на компьютере/телефоне и попробуйте другой браузер.</li>
+            <li>Если адрес не открывается, переподключитесь к Wi‑Fi роутера или используйте LAN-кабель.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image23.jpg" alt="Подключение кабелей к роутеру" loading="lazy" /></figure>
-          <figure><img src="assets/images/image8.png" alt="Страница входа в админку OpenWRT" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image23.webp" type="image/webp" />
+              <img src="assets/images/image23.jpg" width="1452" height="592" alt="Подключение кабелей к роутеру" loading="lazy" />
+            </picture>
+            <figcaption>Подключите кабель провайдера в WAN-порт, а устройство — в LAN-порт.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image8.webp" type="image/webp" />
+              <img src="assets/images/image8.png" width="2048" height="1104" alt="Страница входа в админку OpenWrt" loading="lazy" />
+            </picture>
+            <figcaption>Страница входа в админку OpenWrt по адресу 192.168.1.1.</figcaption>
+          </figure>
         </div>
       </article>
 
@@ -95,17 +229,57 @@
           <li>Нажмите <strong>Сохранить</strong>, затем <strong>Применить</strong>.</li>
           <li>Проверьте, что интернет-подключение стало активным.</li>
         </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Уточните у провайдера, нужен ли PPPoE или достаточно DHCP.</li>
+            <li>Проверьте логин и пароль PPPoE без лишних пробелов.</li>
+            <li>После применения подождите 1–2 минуты и обновите страницу интерфейсов.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image4.png" alt="Сеть и интерфейсы в OpenWRT" loading="lazy" /></figure>
-          <figure><img src="assets/images/image16.png" alt="Настройки WAN интерфейса" loading="lazy" /></figure>
-          <figure><img src="assets/images/image9.png" alt="Выбор протокола PPPoE" loading="lazy" /></figure>
-          <figure><img src="assets/images/image15.png" alt="Применение настроек OpenWRT" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image4.webp" type="image/webp" />
+              <img src="assets/images/image4.png" width="1023" height="941" alt="Сеть и интерфейсы в OpenWrt" loading="lazy" />
+            </picture>
+            <figcaption>Откройте раздел «Сеть → Интерфейсы».</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image16.webp" type="image/webp" />
+              <img src="assets/images/image16.png" width="989" height="875" alt="Настройки WAN интерфейса" loading="lazy" />
+            </picture>
+            <figcaption>Найдите интерфейс WAN и откройте его настройки.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image9.webp" type="image/webp" />
+              <img src="assets/images/image9.png" width="932" height="521" alt="Выбор протокола PPPoE" loading="lazy" />
+            </picture>
+            <figcaption>Выберите PPPoE и введите данные от провайдера.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image15.webp" type="image/webp" />
+              <img src="assets/images/image15.png" width="228" height="70" alt="Применение настроек OpenWrt" loading="lazy" />
+            </picture>
+            <figcaption>После сохранения примените изменения.</figcaption>
+          </figure>
         </div>
       </article>
 
       <article class="card" id="dhcp">
         <h2>DHCP: не открывается страница логина провайдера</h2>
         <p>Позвоните провайдеру и сообщите, что вы заменили роутер. Обычно нужно обновить <strong>MAC-адрес</strong> на стороне провайдера.</p>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Проверьте, что WAN-интерфейс получает IP-адрес от провайдера.</li>
+            <li>Попросите провайдера обновить MAC-адрес или сбросить привязку оборудования.</li>
+            <li>Перезагрузите роутер после смены MAC-адреса на стороне провайдера.</li>
+          </ul>
+        </div>
       </article>
 
       <article class="card" id="wifi">
@@ -116,10 +290,36 @@
           <li>Измените имя сети (SSID) и пароль.</li>
           <li>Сохраните и примените настройки.</li>
         </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Проверьте, что меняете нужную сеть: 2.4G или 5G.</li>
+            <li>Используйте пароль от 8 символов и без кириллицы для старых устройств.</li>
+            <li>После смены имени сети удалите старую сеть на телефоне и подключитесь заново.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image20.png" alt="Раздел беспроводной сети OpenWRT" loading="lazy" /></figure>
-          <figure><img src="assets/images/image5.png" alt="Изменение имени сети Wi-Fi" loading="lazy" /></figure>
-          <figure><img src="assets/images/image6.png" alt="Изменение пароля Wi-Fi" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image20.webp" type="image/webp" />
+              <img src="assets/images/image20.png" width="1002" height="432" alt="Раздел беспроводной сети OpenWrt" loading="lazy" />
+            </picture>
+            <figcaption>Откройте список беспроводных сетей.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image5.webp" type="image/webp" />
+              <img src="assets/images/image5.png" width="913" height="895" alt="Изменение имени сети Wi‑Fi" loading="lazy" />
+            </picture>
+            <figcaption>Измените имя сети в поле SSID.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image6.webp" type="image/webp" />
+              <img src="assets/images/image6.png" width="907" height="944" alt="Изменение пароля Wi‑Fi" loading="lazy" />
+            </picture>
+            <figcaption>Задайте новый пароль и сохраните настройки.</figcaption>
+          </figure>
         </div>
       </article>
 
@@ -132,26 +332,75 @@
           <li>Примените изменения. Если нужно, перезапустите podkop в разделе «Диагностика».</li>
           <li>Если сайт не открывается сразу, проверьте в режиме инкогнито или в другом браузере.</li>
         </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Добавляйте только домен, например <code>example.com</code>, без <code>https://</code> и пути.</li>
+            <li>Проверьте сайт в режиме инкогнито, чтобы исключить кеш браузера.</li>
+            <li>Перезапустите podkop в диагностике и проверьте статус секции.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image2.png" alt="Секции podkop" loading="lazy" /></figure>
-          <figure><img src="assets/images/image3.png" alt="Тип пользовательского списка доменов" loading="lazy" /></figure>
-          <figure><img src="assets/images/image18.png" alt="Поле для доменов в podkop" loading="lazy" /></figure>
-          <figure><img src="assets/images/image11.png" alt="Применение изменений в podkop" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image2.webp" type="image/webp" />
+              <img src="assets/images/image2.png" width="991" height="464" alt="Секции podkop" loading="lazy" />
+            </picture>
+            <figcaption>Перейдите в секции podkop.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image3.webp" type="image/webp" />
+              <img src="assets/images/image3.png" width="973" height="876" alt="Тип пользовательского списка доменов" loading="lazy" />
+            </picture>
+            <figcaption>Выберите текстовый список доменов.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image18.webp" type="image/webp" />
+              <img src="assets/images/image18.png" width="955" height="287" alt="Поле для доменов в podkop" loading="lazy" />
+            </picture>
+            <figcaption>Добавляйте домены без https:// и лишних путей.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image11.webp" type="image/webp" />
+              <img src="assets/images/image11.png" width="348" height="55" alt="Применение изменений в podkop" loading="lazy" />
+            </picture>
+            <figcaption>Примените изменения после редактирования списка.</figcaption>
+          </figure>
         </div>
       </article>
 
       <article class="card" id="adguard">
-        <h2>Как перезапустить AdguardVPN</h2>
+        <h2>Как перезапустить AdGuard VPN</h2>
         <ol>
           <li>Откройте командную строку (<code>Win + R → cmd</code>).</li>
-          <li>Подключитесь к роутеру: <code>ssh root@192.168.1.1</code>.</li>
+          <li>Подключитесь к роутеру: <span class="copy-chip"><code>ssh root@192.168.1.1</code><button type="button" data-copy-value="ssh root@192.168.1.1">Скопировать</button></span>.</li>
           <li>При запросе ключа введите <code>yes</code>, затем пароль роутера.</li>
           <li>Запустите команду:</li>
         </ol>
-        <pre><code>/opt/adguardvpn_cli/adguardvpn-cli connect -l PL</code></pre>
-        <p>После выполнения команду можно закрыть.</p>
+        <div class="copy-block">
+          <pre><code id="adguardCommand">/opt/adguardvpn_cli/adguardvpn-cli connect -l PL</code></pre>
+          <button type="button" data-copy-target="#adguardCommand">Скопировать</button>
+        </div>
+        <p>После выполнения команды окно можно закрыть.</p>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Проверьте, что компьютер подключен к сети этого роутера.</li>
+            <li>При первом SSH-подключении введите <code>yes</code> для подтверждения ключа.</li>
+            <li>Если команда не сработала, проверьте, что путь к AdGuard VPN совпадает с указанным.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image17.png" alt="SSH вход на роутер OpenWRT" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image17.webp" type="image/webp" />
+              <img src="assets/images/image17.png" width="1115" height="628" alt="SSH вход на роутер OpenWrt" loading="lazy" />
+            </picture>
+            <figcaption>Подключение к роутеру по SSH из командной строки.</figcaption>
+          </figure>
         </div>
       </article>
 
@@ -164,15 +413,41 @@
           <li>Заполните параметры своего VPN (например, VLESS).</li>
           <li>Примените изменения.</li>
         </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Не меняйте секцию <strong>main</strong>, если она отвечает за готовый обход РКН.</li>
+            <li>Проверьте протокол, адрес сервера, порт, UUID и параметры безопасности.</li>
+            <li>После применения откройте диагностику podkop и посмотрите, не горит ли секция красным.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image19.png" alt="Настройки podkop" loading="lazy" /></figure>
-          <figure><img src="assets/images/image12.png" alt="Выбор Proxy в podkop" loading="lazy" /></figure>
-          <figure><img src="assets/images/image10.png" alt="Параметры VPN в podkop" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image19.webp" type="image/webp" />
+              <img src="assets/images/image19.png" width="784" height="499" alt="Настройки podkop" loading="lazy" />
+            </picture>
+            <figcaption>Добавьте отдельную секцию для своего VPN.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image12.webp" type="image/webp" />
+              <img src="assets/images/image12.png" width="526" height="315" alt="Выбор Proxy в podkop" loading="lazy" />
+            </picture>
+            <figcaption>В качестве типа подключения выберите Proxy.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image10.webp" type="image/webp" />
+              <img src="assets/images/image10.png" width="1002" height="430" alt="Параметры VPN в podkop" loading="lazy" />
+            </picture>
+            <figcaption>Заполните параметры своего VPN-подключения.</figcaption>
+          </figure>
         </div>
       </article>
       
       <article class="card" id="some-vless-vpn">
-        <h2>Как добавить несколько кофигрураций VLESS VPN?</h2>
+        <h2>Как добавить несколько конфигураций VLESS VPN?</h2>
         <ol>
           <li>Откройте <strong>Службы → podkop → Секции</strong>.</li>
           <li>Создаем новую секцию <strong>VPN</strong> или используем уже существующую.</li>
@@ -182,10 +457,36 @@
           <li>Выставляем параметр <strong>Интервал проверки URLTest</strong>, который отвечает за частоту опроса пинга локаций.</li>
           <li>Примените изменения.</li>
         </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Убедитесь, что каждая VLESS-ссылка вставлена с новой строки и полностью скопирована.</li>
+            <li>Для ручного выбора используйте <strong>Selector</strong>, для автоматического — <strong>URLTest</strong>.</li>
+            <li>Если одна локация не отвечает, временно удалите её и примените настройки повторно.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image19.png" alt="Настройки podkop" loading="lazy" /></figure>
-          <figure><img src="assets/images/image24.png" alt="Создание секции VPN" loading="lazy" /></figure>
-          <figure><img src="assets/images/image25.png" alt="Несколько конфигураций VLESS" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image19.webp" type="image/webp" />
+              <img src="assets/images/image19.png" width="784" height="499" alt="Настройки podkop" loading="lazy" />
+            </picture>
+            <figcaption>Откройте настройки секций podkop.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image24.webp" type="image/webp" />
+              <img src="assets/images/image24.png" width="697" height="695" alt="Создание секции VPN" loading="lazy" />
+            </picture>
+            <figcaption>Создайте или откройте секцию VPN.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image25.webp" type="image/webp" />
+              <img src="assets/images/image25.png" width="711" height="744" alt="Несколько конфигураций VLESS" loading="lazy" />
+            </picture>
+            <figcaption>Добавьте несколько VLESS-конфигураций в URLTest или Selector.</figcaption>
+          </figure>
         </div>
       </article>
 
@@ -194,7 +495,7 @@
         <h2>Перестал работать YouTube, Instagram и другие сайты в блоке</h2>
         <div class="info-note">
           <p>В случае, если у вас пропал доступ к сайтам YouTube, Instagram и другим заблокированным РКН, вам нужно попробовать обновить конфиг AmneziaVPN. Как это сделать ниже.</p>
-          <p>В дигностике podkop первая секция main, где используется Amnezia, горит красным.</p>
+          <p>В диагностике podkop первая секция main, где используется Amnezia, горит красным.</p>
         </div>
         <ol>
           <li>Скачайте Amnezia WG конфиг: <a href="https://warp-generator.github.io/warp/" target="_blank" rel="noopener noreferrer">warp-generator.github.io/warp</a>.</li>
@@ -202,61 +503,178 @@
           <li>Импортируйте содержимое скачанного конфигурационного файла.</li>
           <li>Нажмите «Импорт настроек» и примените изменения.</li>
         </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Скачайте новый конфиг и импортируйте именно содержимое файла, а не ссылку на него.</li>
+            <li>Проверьте, что интерфейс AmneziaWG включен после применения настроек.</li>
+            <li>Если podkop всё ещё красный, перезапустите сервис и обновите страницу диагностики.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image1.png" alt="Интерфейс AmneziaWG в OpenWRT" loading="lazy" /></figure>
-          <figure><img src="assets/images/image7.png" alt="Импорт конфигурации AmneziaWG" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image1.webp" type="image/webp" />
+              <img src="assets/images/image1.png" width="1002" height="311" alt="Интерфейс AmneziaWG в OpenWrt" loading="lazy" />
+            </picture>
+            <figcaption>Откройте интерфейс AmneziaWG в настройках сети.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image7.webp" type="image/webp" />
+              <img src="assets/images/image7.png" width="833" height="862" alt="Импорт конфигурации AmneziaWG" loading="lazy" />
+            </picture>
+            <figcaption>Импортируйте новый конфигурационный файл AmneziaWG.</figcaption>
+          </figure>
         </div>
       </article>
       
       <article class="card" id="xbox-dns">
-        <h2>Как прописать DNS для XBOX? </h2>
+        <h2>Как прописать DNS для Xbox?</h2>
         <ol>
           <li>Откройте <strong>Службы → podkop → Настройки</strong>.</li>
-          <li>Ставим <strong>Тип протокола DNS</strong> —  UPD.</li>
+          <li>Ставим <strong>Тип протокола DNS</strong> — UDP.</li>
           <li>Переходим на сайт <a href="https://xbox-dns.ru/" target="_blank" rel="noopener noreferrer">xbox-dns.ru</a> и копируем там <strong>Основной (IPv4)</strong> и <strong>Дополнительный (IPv4)</strong>.</li>
           <li>Прописываем основной DNS в <strong>DNS-сервер</strong> и дополнительный в <strong>Bootstrap DNS-сервер</strong>.</li>
           <li>Примените изменения.</li>
         </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Проверьте, что выбран протокол DNS — UDP.</li>
+            <li>Сверьте основной и дополнительный IPv4 DNS с сайтом xbox-dns.ru.</li>
+            <li>Перезагрузите Xbox или переподключите его к сети после применения настроек.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image26.png" alt="Настройки podkop" loading="lazy" /></figure>
-          <figure><img src="assets/images/image27.png" alt="Xbox DNS" loading="lazy" /></figure>
-          <figure><img src="assets/images/image28.png" alt="Прописываем пользовательские DNS" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image26.webp" type="image/webp" />
+              <img src="assets/images/image26.png" width="752" height="502" alt="Настройки podkop" loading="lazy" />
+            </picture>
+            <figcaption>Откройте общие настройки podkop.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image27.webp" type="image/webp" />
+              <img src="assets/images/image27.png" width="1113" height="391" alt="Xbox DNS" loading="lazy" />
+            </picture>
+            <figcaption>Скопируйте основной и дополнительный IPv4 DNS.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image28.webp" type="image/webp" />
+              <img src="assets/images/image28.png" width="715" height="457" alt="Прописываем пользовательские DNS" loading="lazy" />
+            </picture>
+            <figcaption>Укажите DNS-серверы в настройках podkop.</figcaption>
+          </figure>
         </div>
       </article>
 
-        <article class="card" id="full-vpn">
+      <article class="card" id="full-vpn">
         <h2>Как пустить весь трафик через VPN?</h2>
         <div class="info-note">
           <p>Это может быть полезно, когда вам нужно обойти проблему подключения на каком-то устройстве, но вы не знаете какой домен нужно прописать в podkop. Например, пустить весь трафик PlayStation через VPN, чтобы получить доступ к игре. Либо у вас возникает ошибка подключения умного устройства в приложении из-за блокировок.</p>
         </div>
         <ol>
-          <li>Заходим на главную страницу админки, смотрим подключенные устройства. Чтобы понять какой локальный ip у устройства, пытаемся его отключить и подключить, обращая внимания на изменения в таблице устройств.</li>
-          <li>На нужном устройстве жмем<strong>«Закрепить IP»</strong>.</li>
-          <li>Идем в <strong>Службы → Podkop → Секции</strong>.</li>
-          <li>Ищем пункт <strong>«Полностью маршрутизированные IP-адреса»</strong> в секции нужного нам VPN и добавляем туда локальный ip адрес устройства, который мы закрепили в прошлых пунктах</li>
-          <li>Теперь весь трафик этого устройства будет идти через VPN. В альтернативном варианте, вам нужно определить точные домены и прописать их в «Пользователських списках».</li>
+          <li>Заходим на главную страницу админки, смотрим подключенные устройства. Чтобы понять, какой локальный IP у устройства, отключите и подключите его, обращая внимание на изменения в таблице устройств.</li>
+          <li>На нужном устройстве жмем <strong>«Закрепить IP»</strong>.</li>
+          <li>Идем в <strong>Службы → podkop → Секции</strong>.</li>
+          <li>Ищем пункт <strong>«Полностью маршрутизированные IP-адреса»</strong> в секции нужного нам VPN и добавляем туда локальный IP-адрес устройства, который мы закрепили в прошлых пунктах.</li>
+          <li>Теперь весь трафик этого устройства будет идти через VPN. В альтернативном варианте вам нужно определить точные домены и прописать их в «Пользовательских списках».</li>
         </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Убедитесь, что IP устройства закреплен и не меняется после переподключения.</li>
+            <li>Добавляйте именно локальный IP устройства, например <code>192.168.1.120</code>.</li>
+            <li>Проверьте, что выбранная VPN-секция сама работает до маршрутизации всего устройства.</li>
+          </ul>
+        </div>
         <div class="gallery">
-          <figure><img src="assets/images/image29.png" alt="Интерфейс AmneziaWG в OpenWRT" loading="lazy" /></figure>
-          <figure><img src="assets/images/image30.png" alt="Импорт конфигурации AmneziaWG" loading="lazy" /></figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image29.webp" type="image/webp" />
+              <img src="assets/images/image29.png" width="1269" height="976" alt="Список подключенных устройств в OpenWrt" loading="lazy" />
+            </picture>
+            <figcaption>Найдите нужное устройство в списке подключенных клиентов.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image30.webp" type="image/webp" />
+              <img src="assets/images/image30.png" width="1323" height="903" alt="Полностью маршрутизированные IP-адреса в podkop" loading="lazy" />
+            </picture>
+            <figcaption>Добавьте закрепленный IP в полностью маршрутизированные адреса.</figcaption>
+          </figure>
         </div>
       </article>
 
-          <article class="card" id="wi-fi-problem">
-        <h2>Как пустить весь трафик через VPN?</h2>
+      <article class="card" id="wi-fi-problem">
+        <h2>Устройство не видит Wi‑Fi (2G / 5G)</h2>
         <div class="info-note">
-          <p>Проблема может быть из-за того, что у 2g или 5g сети стоит <strong>auto</strong> режим выставления каналы работы. При таком режиме может выставиться самый свободный канал, котоый не видит телевизор, телефон и так далее.</p>
+          <p>Проблема может быть из-за того, что у 2G или 5G сети стоит режим <strong>auto</strong> для выбора рабочего канала. При таком режиме может выставиться свободный канал, который не видит телевизор, телефон или другое устройство.</p>
         </div>
         <ol>
           <li>Идем в раздел <strong>Сеть → Беспроводная сеть</strong>.</li>
           <li>Нажимаем изменить на 2G или 5G сети.</li>
-          <li>Проверяем что стоит в пункте<strong>«Настройка частоты»</strong>. Ставим самый первый доступный канал вместо <strong>auto</strong>, например, 1 или 40. Ширину ставим 20 или 40. </li>
+          <li>Проверяем, что стоит в пункте <strong>«Настройка частоты»</strong>. Ставим самый первый доступный канал вместо <strong>auto</strong>, например 1 или 40. Ширину ставим 20 или 40.</li>
           <li>Здесь же можно поэкспериментировать с частотой, мощностью, шириной канала. Проверяете все настройки и оставляете те, с которыми у вас самая высокая скорость передачи в сети.</li>
         </ol>
-        <div class="gallery">
-          <figure><img src="assets/images/image31.png" alt="Интерфейс AmneziaWG в OpenWRT" loading="lazy" /></figure>
-          <figure><img src="assets/images/image32.png" alt="Импорт конфигурации AmneziaWG" loading="lazy" /></figure>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Для старых устройств сначала проверьте сеть 2.4G.</li>
+            <li>Поставьте фиксированный канал вместо <strong>auto</strong> и примените настройки.</li>
+            <li>Если сеть появилась, но скорость низкая, попробуйте другую ширину канала: 20 или 40 МГц.</li>
+          </ul>
         </div>
+        <div class="gallery">
+          <figure>
+            <picture>
+              <source srcset="assets/images/image31.webp" type="image/webp" />
+              <img src="assets/images/image31.png" width="1221" height="481" alt="Список беспроводных сетей OpenWrt" loading="lazy" />
+            </picture>
+            <figcaption>Выберите проблемную 2G или 5G сеть и откройте настройки.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/image32.webp" type="image/webp" />
+              <img src="assets/images/image32.png" width="955" height="1171" alt="Настройка канала Wi‑Fi в OpenWrt" loading="lazy" />
+            </picture>
+            <figcaption>Замените auto на конкретный канал и проверьте видимость сети.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="card faq-card" id="faq">
+        <h2>FAQ</h2>
+        <details>
+          <summary>Не открывается 192.168.1.1</summary>
+          <p>Проверьте, что вы подключены к этому роутеру по LAN или Wi‑Fi, отключите VPN на устройстве и откройте <code>http://192.168.1.1</code> в другом браузере.</p>
+        </details>
+        <details>
+          <summary>Что такое WAN и LAN?</summary>
+          <p><strong>WAN</strong> — порт для кабеля провайдера. <strong>LAN</strong> — порт для компьютера, телевизора или другого устройства внутри вашей домашней сети.</p>
+        </details>
+        <details>
+          <summary>Где взять PPPoE логин и пароль?</summary>
+          <p>Обычно они указаны в договоре с провайдером, в личном кабинете или выдаются службой поддержки. Если провайдер использует DHCP, PPPoE-данные могут не понадобиться.</p>
+        </details>
+        <details>
+          <summary>Почему устройство не видит Wi‑Fi?</summary>
+          <p>Частая причина — автоматический выбор канала. Поставьте фиксированный канал для 2.4G или 5G, примените настройки и переподключите устройство.</p>
+        </details>
+        <details>
+          <summary>Что делать, если VPN не заработал?</summary>
+          <p>Проверьте конфиг, примените настройки, откройте диагностику podkop и убедитесь, что нужная секция не горит красным. Если нужно, перезапустите сервис.</p>
+        </details>
+      </article>
+
+      <article class="card feedback-card" id="feedback">
+        <p class="eyebrow">Финальный шаг</p>
+        <h2>Инструкция помогла?</h2>
+        <p>Если всё заработало, буду благодарен за отзыв на Авито. Это помогает другим покупателям быстрее понять, что роутер уже подготовлен и инструкция рабочая.</p>
+        <button class="hero-btn feedback-card__button" id="helpedButton" type="button">Инструкция помогла</button>
       </article>
 
     </section>
@@ -271,6 +689,8 @@
       <img
         class="review-popup__image"
         src="assets/images/avito-review.svg"
+        width="1080"
+        height="520"
         alt="Рейтинг и отзывы Авито"
         loading="lazy"
       />
@@ -328,13 +748,195 @@
         link.href = matchedReviewOverride ? matchedReviewOverride.url : defaultReviewUrl;
       });
 
+      const tocSearch = document.getElementById("tocSearch");
+      const tocSearchClear = document.getElementById("tocSearchClear");
+      const tocSearchEmpty = document.getElementById("tocSearchEmpty");
+      const tocLinks = Array.from(document.querySelectorAll("#tocNav a"));
+      const feedbackCard = document.getElementById("feedback");
+      const searchableEntries = tocLinks.map(function (link) {
+        const id = link.getAttribute("href").slice(1);
+        const article = document.getElementById(id);
+        const keywords = link.getAttribute("data-keywords") || "";
+        return {
+          id: id,
+          link: link,
+          article: article,
+          haystack: normalizeSearch([link.textContent, keywords, article ? article.textContent : ""].join(" "))
+        };
+      }).filter(function (entry) {
+        return entry.article;
+      });
+      let searchVisibleCount = searchableEntries.length;
+
+      function normalizeSearch(value) {
+        return value
+          .toLowerCase()
+          .replace(/ё/g, "е")
+          .replace(/[‑–—]/g, "-")
+          .replace(/wi[\s-]?fi/g, "wifi")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      function setActiveLink(id) {
+        tocLinks.forEach(function (link) {
+          link.classList.toggle("is-active", link.getAttribute("href") === "#" + id);
+        });
+      }
+
+      function updateActiveSection() {
+        const query = tocSearch ? normalizeSearch(tocSearch.value) : "";
+        if (query && searchVisibleCount === 0) {
+          setActiveLink("");
+          return;
+        }
+
+        let activeId = "";
+        searchableEntries.forEach(function (entry) {
+          if (entry.article.hidden) return;
+          const rect = entry.article.getBoundingClientRect();
+          if (rect.top <= Math.min(180, window.innerHeight * 0.35)) {
+            activeId = entry.id;
+          }
+        });
+
+        if (!activeId) {
+          const firstVisible = searchableEntries.find(function (entry) {
+            return !entry.article.hidden;
+          });
+          activeId = firstVisible ? firstVisible.id : "";
+        }
+
+        setActiveLink(activeId);
+      }
+
+      let activeUpdateQueued = false;
+      function queueActiveUpdate() {
+        if (activeUpdateQueued) return;
+        activeUpdateQueued = true;
+        window.requestAnimationFrame(function () {
+          activeUpdateQueued = false;
+          updateActiveSection();
+        });
+      }
+
+      function updateSearch() {
+        if (!tocSearch) return;
+        const query = normalizeSearch(tocSearch.value);
+        searchVisibleCount = 0;
+
+        searchableEntries.forEach(function (entry) {
+          const isMatch = !query || entry.haystack.includes(query);
+          entry.link.hidden = !isMatch;
+          entry.article.hidden = !isMatch;
+          if (isMatch) searchVisibleCount += 1;
+        });
+
+        if (feedbackCard) {
+          feedbackCard.hidden = Boolean(query);
+        }
+
+        tocSearchClear.hidden = !query;
+        tocSearchEmpty.hidden = !query || searchVisibleCount > 0;
+        queueActiveUpdate();
+      }
+
+      if (tocSearch) {
+        tocSearch.addEventListener("input", updateSearch);
+        tocSearchClear.addEventListener("click", function () {
+          tocSearch.value = "";
+          tocSearch.focus();
+          updateSearch();
+        });
+        updateSearch();
+      }
+
+      if ("IntersectionObserver" in window) {
+        const sectionObserver = new IntersectionObserver(function () {
+          queueActiveUpdate();
+        }, { rootMargin: "-18% 0px -68% 0px", threshold: [0, 0.2, 0.6] });
+        searchableEntries.forEach(function (entry) {
+          sectionObserver.observe(entry.article);
+        });
+      }
+
+      window.addEventListener("scroll", queueActiveUpdate, { passive: true });
+      window.addEventListener("resize", queueActiveUpdate);
+      queueActiveUpdate();
+
+      function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(text);
+        }
+
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+
+        try {
+          document.execCommand("copy");
+          return Promise.resolve();
+        } catch (error) {
+          return Promise.reject(error);
+        } finally {
+          textarea.remove();
+        }
+      }
+
+      document.querySelectorAll("[data-copy-value], [data-copy-target]").forEach(function (button) {
+        const defaultText = button.textContent;
+        button.addEventListener("click", function () {
+          const targetSelector = button.getAttribute("data-copy-target");
+          const target = targetSelector ? document.querySelector(targetSelector) : null;
+          const value = button.getAttribute("data-copy-value") || (target ? target.textContent.trim() : "");
+          if (!value) return;
+
+          copyText(value).then(function () {
+            button.textContent = "Скопировано";
+            button.classList.add("is-copied");
+            window.setTimeout(function () {
+              button.textContent = defaultText;
+              button.classList.remove("is-copied");
+            }, 1600);
+          }).catch(function () {
+            button.textContent = "Не скопировано";
+            window.setTimeout(function () {
+              button.textContent = defaultText;
+            }, 1600);
+          });
+        });
+      });
+
+      const faqDetails = document.querySelectorAll(".faq-card details");
+      window.addEventListener("beforeprint", function () {
+        faqDetails.forEach(function (details) {
+          if (!details.open) {
+            details.dataset.wasClosedBeforePrint = "true";
+            details.open = true;
+          }
+        });
+      });
+      window.addEventListener("afterprint", function () {
+        faqDetails.forEach(function (details) {
+          if (details.dataset.wasClosedBeforePrint) {
+            details.open = false;
+            delete details.dataset.wasClosedBeforePrint;
+          }
+        });
+      });
+
       const modal = document.getElementById("imageModal");
       const modalImg = document.getElementById("imageModalContent");
       const modalClose = document.getElementById("imageModalClose");
       const galleryImages = document.querySelectorAll(".gallery img");
 
       function openModal(img) {
-        modalImg.src = img.src;
+        modalImg.src = img.currentSrc || img.src;
         modalImg.alt = img.alt || "Увеличенное изображение";
         modal.classList.add("is-open");
         modal.setAttribute("aria-hidden", "false");
@@ -372,10 +974,29 @@
       const reviewPopupClose = document.getElementById("reviewPopupClose");
       const reviewPopupCta = document.getElementById("reviewPopupCta");
       const reviewPopupImage = reviewPopup.querySelector(".review-popup__image");
+      const helpedButton = document.getElementById("helpedButton");
+      const reviewSessionKey = "openwrtReviewPopupDismissed";
       let reviewPopupHandled = false;
 
-      function openReviewPopup() {
-        if (reviewPopupHandled) return;
+      function isReviewDismissed() {
+        try {
+          return sessionStorage.getItem(reviewSessionKey) === "1";
+        } catch (error) {
+          return false;
+        }
+      }
+
+      function markReviewDismissed() {
+        try {
+          sessionStorage.setItem(reviewSessionKey, "1");
+        } catch (error) {
+          // Session storage can be unavailable in strict privacy modes.
+        }
+      }
+
+      function openReviewPopup(options) {
+        const force = options && options.force;
+        if (!force && (reviewPopupHandled || isReviewDismissed())) return;
         reviewPopupHandled = true;
         reviewPopup.classList.add("is-open");
         reviewPopup.setAttribute("aria-hidden", "false");
@@ -386,6 +1007,7 @@
         reviewPopup.classList.remove("is-open");
         reviewPopup.setAttribute("aria-hidden", "true");
         document.body.classList.remove("review-popup-open");
+        markReviewDismissed();
       }
 
       if (reviewPopupImage) {
@@ -394,15 +1016,33 @@
         });
       }
 
-      function onScrollReviewPopup() {
-        if (reviewPopupHandled) return;
-        if (window.scrollY >= window.innerHeight * 0.85) {
-          openReviewPopup();
-          window.removeEventListener("scroll", onScrollReviewPopup);
+      if (helpedButton) {
+        helpedButton.addEventListener("click", function () {
+          openReviewPopup({ force: true });
+        });
+      }
+
+      if (feedbackCard) {
+        if ("IntersectionObserver" in window) {
+          const reviewObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                openReviewPopup();
+                reviewObserver.disconnect();
+              }
+            });
+          }, { threshold: 0.45 });
+          reviewObserver.observe(feedbackCard);
+        } else {
+          window.addEventListener("scroll", function onReviewScroll() {
+            const nearBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 160;
+            if (nearBottom) {
+              openReviewPopup();
+              window.removeEventListener("scroll", onReviewScroll);
+            }
+          }, { passive: true });
         }
       }
-      window.addEventListener("scroll", onScrollReviewPopup, { passive: true });
-      onScrollReviewPopup();
 
       reviewPopupClose.addEventListener("click", function () {
         closeReviewPopup();
