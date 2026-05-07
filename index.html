@@ -1262,16 +1262,61 @@
         control.count.textContent = String(getSectionLikeCount(sectionId));
       }
 
+      function jsonpRequest(url, params) {
+        if (!url) return Promise.reject(new Error("JSONP URL is missing"));
+
+        return new Promise(function (resolve, reject) {
+          const callbackName = "openwrtLikesCallback_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+          const script = document.createElement("script");
+          const requestUrl = new URL(url);
+          const timeoutId = window.setTimeout(function () {
+            cleanup();
+            reject(new Error("JSONP request timed out"));
+          }, 10000);
+
+          function cleanup() {
+            window.clearTimeout(timeoutId);
+            delete window[callbackName];
+            script.remove();
+          }
+
+          Object.keys(params || {}).forEach(function (key) {
+            requestUrl.searchParams.set(key, params[key]);
+          });
+          requestUrl.searchParams.set("callback", callbackName);
+
+          window[callbackName] = function (payload) {
+            cleanup();
+            resolve(payload);
+          };
+
+          script.onerror = function () {
+            cleanup();
+            reject(new Error("JSONP request failed"));
+          };
+          script.src = requestUrl.toString();
+          document.head.appendChild(script);
+        });
+      }
+
+      function loadSectionLikeCounts() {
+        if (!likesApiUrl) return Promise.resolve({});
+
+        return fetch(likesApiUrl).then(function (response) {
+          if (!response.ok) throw new Error("Like counts load failed");
+          return response.json();
+        }).catch(function () {
+          return jsonpRequest(likesApiUrl, { action: "list" });
+        });
+      }
+
       function syncSectionLike(sectionId, delta) {
         if (!likesApiUrl) return Promise.resolve(null);
 
-        return fetch(likesApiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ sectionId: sectionId, delta: delta })
-        }).then(function (response) {
-          if (!response.ok) throw new Error("Like sync failed");
-          return response.json();
+        return jsonpRequest(likesApiUrl, {
+          action: "vote",
+          sectionId: sectionId,
+          delta: delta
         }).then(function (payload) {
           if (payload && payload.ok && payload.sectionId) {
             setSectionLikeCount(payload.sectionId, payload.count);
@@ -1350,10 +1395,7 @@
       });
 
       if (likesApiUrl) {
-        fetch(likesApiUrl).then(function (response) {
-          if (!response.ok) throw new Error("Like counts load failed");
-          return response.json();
-        }).then(function (counts) {
+        loadSectionLikeCounts().then(function (counts) {
           Object.keys(sectionLikeControls).forEach(function (sectionId) {
             const remoteCount = Number(counts && counts[sectionId]);
             setSectionLikeCount(sectionId, Number.isFinite(remoteCount) ? remoteCount : 0);
