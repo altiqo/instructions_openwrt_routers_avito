@@ -25,5 +25,6 @@ window.APP_CONFIG = {
         url: "https://t.me/chumerov"
       }
     ]
-  }
+  },
+  likesApiUrl: "https://script.google.com/macros/s/AKfycbwiTl9zYtYDob_cOO-llcul0BwvezFE82j_TRI9lBpMIL6lIBrThwF55xPRdFMES9mJ3w/exec"
 };

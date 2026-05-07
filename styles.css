@@ -397,6 +397,12 @@ summary:focus-visible,
   color: var(--text);
 }
 
+.section-like:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+}
+
 .section-like.is-liked {
   color: #06111d;
   border-color: transparent;

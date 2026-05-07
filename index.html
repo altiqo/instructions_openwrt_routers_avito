@@ -1218,6 +1218,7 @@
       });
 
       const sectionLikeStorageKey = "openwrtSectionLikes:v1";
+      const likesApiUrl = appConfig.likesApiUrl || "";
 
       function readLikedSections() {
         try {
@@ -1238,6 +1239,47 @@
       }
 
       const likedSections = readLikedSections();
+      const sectionLikeControls = {};
+      const sectionLikeCounts = {};
+
+      function getSectionLikeCount(sectionId) {
+        return Number(sectionLikeCounts[sectionId] || 0);
+      }
+
+      function setSectionLikeCount(sectionId, value) {
+        sectionLikeCounts[sectionId] = Math.max(0, Number(value || 0));
+        renderSectionLike(sectionId);
+      }
+
+      function renderSectionLike(sectionId) {
+        const control = sectionLikeControls[sectionId];
+        if (!control) return;
+
+        const isLiked = Boolean(likedSections[sectionId]);
+        control.button.classList.toggle("is-liked", isLiked);
+        control.button.setAttribute("aria-pressed", isLiked ? "true" : "false");
+        control.icon.textContent = isLiked ? "♥" : "♡";
+        control.count.textContent = String(getSectionLikeCount(sectionId));
+      }
+
+      function syncSectionLike(sectionId, delta) {
+        if (!likesApiUrl) return Promise.resolve(null);
+
+        return fetch(likesApiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ sectionId: sectionId, delta: delta })
+        }).then(function (response) {
+          if (!response.ok) throw new Error("Like sync failed");
+          return response.json();
+        }).then(function (payload) {
+          if (payload && payload.ok && payload.sectionId) {
+            setSectionLikeCount(payload.sectionId, payload.count);
+          }
+          return payload;
+        });
+      }
+
       document.querySelectorAll("article.card[id]").forEach(function (card) {
         if (card.id === "feedback") return;
 
@@ -1255,6 +1297,7 @@
         likeButton.className = "section-like";
         likeButton.type = "button";
         likeButton.setAttribute("aria-label", "Отметить раздел как полезный");
+        likeButton.dataset.sectionId = card.id;
 
         const icon = document.createElement("span");
         icon.className = "section-like__icon";
@@ -1269,26 +1312,58 @@
         likeButton.append(icon, text, count);
         cardHeader.appendChild(likeButton);
 
-        function renderLikeState() {
-          const isLiked = Boolean(likedSections[card.id]);
-          likeButton.classList.toggle("is-liked", isLiked);
-          likeButton.setAttribute("aria-pressed", isLiked ? "true" : "false");
-          icon.textContent = isLiked ? "♥" : "♡";
-          count.textContent = isLiked ? "1" : "0";
-        }
-
         likeButton.addEventListener("click", function () {
-          if (likedSections[card.id]) {
+          const wasLiked = Boolean(likedSections[card.id]);
+          const previousCount = getSectionLikeCount(card.id);
+          const delta = wasLiked ? -1 : 1;
+
+          if (wasLiked) {
             delete likedSections[card.id];
           } else {
             likedSections[card.id] = true;
           }
           saveLikedSections(likedSections);
-          renderLikeState();
+          setSectionLikeCount(card.id, previousCount + delta);
+          likeButton.disabled = true;
+
+          syncSectionLike(card.id, delta).catch(function () {
+            if (wasLiked) {
+              likedSections[card.id] = true;
+            } else {
+              delete likedSections[card.id];
+            }
+            saveLikedSections(likedSections);
+            setSectionLikeCount(card.id, previousCount);
+          }).finally(function () {
+            likeButton.disabled = false;
+            renderSectionLike(card.id);
+          });
         });
 
-        renderLikeState();
+        sectionLikeControls[card.id] = {
+          button: likeButton,
+          icon: icon,
+          count: count
+        };
+        sectionLikeCounts[card.id] = likedSections[card.id] ? 1 : 0;
+        renderSectionLike(card.id);
       });
+
+      if (likesApiUrl) {
+        fetch(likesApiUrl).then(function (response) {
+          if (!response.ok) throw new Error("Like counts load failed");
+          return response.json();
+        }).then(function (counts) {
+          Object.keys(sectionLikeControls).forEach(function (sectionId) {
+            const remoteCount = Number(counts && counts[sectionId]);
+            setSectionLikeCount(sectionId, Number.isFinite(remoteCount) ? remoteCount : 0);
+          });
+        }).catch(function () {
+          Object.keys(sectionLikeControls).forEach(function (sectionId) {
+            renderSectionLike(sectionId);
+          });
+        });
+      }
 
       let searchVisibleCount = searchableEntries.length;
 
