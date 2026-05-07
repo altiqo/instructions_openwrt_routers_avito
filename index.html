@@ -62,6 +62,12 @@
             { "@type": "HowToStep", "name": "Настроить подключение", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#conn", "text": "Выберите тип подключения WAN и введите данные провайдера при PPPoE." },
             { "@type": "HowToStep", "name": "Настроить Wi‑Fi", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#wifi", "text": "Измените имя сети и пароль для 2.4G и 5G сетей." },
             { "@type": "HowToStep", "name": "Настроить обход и VPN", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#bypass", "text": "Добавьте домены в podkop или настройте собственный VPN." },
+            { "@type": "HowToStep", "name": "Сделать резервную копию", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#backup-restore", "text": "Скачайте архив настроек OpenWrt перед серьёзными изменениями и сохраните его в безопасном месте." },
+            { "@type": "HowToStep", "name": "Сменить пароль администратора", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#admin-password", "text": "Откройте раздел администрирования и задайте новый пароль root." },
+            { "@type": "HowToStep", "name": "Сбросить роутер и восстановить доступ", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#reset-access", "text": "После reset подключайтесь по LAN-кабелю, заново установите недостающие пакеты podkop и AmneziaWG, затем восстанавливайте настройки." },
+            { "@type": "HowToStep", "name": "Проверить podkop и VPN", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#podkop-diagnostics", "text": "Откройте диагностику podkop, проверьте красные секции и перезапустите сервис при необходимости." },
+            { "@type": "HowToStep", "name": "Закрепить IP устройства", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#static-lease", "text": "Найдите устройство в списке клиентов, закрепите IP и примените настройки." },
+            { "@type": "HowToStep", "name": "Перенастроить роутер после смены провайдера", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#provider-change", "text": "Подключите новый кабель в WAN, выберите DHCP или PPPoE и учтите MAC-привязку." },
             { "@type": "HowToStep", "name": "Проверить частые проблемы", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#faq", "text": "Используйте FAQ и блоки проверки, если подключение, Wi‑Fi или VPN не заработали." }
           ]
         },
@@ -108,6 +114,30 @@
               "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "Проверьте корректность конфигурации, примените настройки, перезапустите podkop или VPN-сервис и посмотрите диагностику."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Зачем делать резервную копию настроек",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Backup позволяет вернуть рабочую конфигурацию после неудачных изменений, сброса или смены провайдера."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Как восстановить доступ после сброса",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "После сброса OpenWrt обычно не поднимает Wi‑Fi, поэтому подключайтесь по LAN-кабелю и открывайте http://192.168.1.1. Перед полным восстановлением настроек установите недостающие пакеты podkop и AmneziaWG через SSH."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Что проверить после смены провайдера",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Проверьте WAN-кабель, тип подключения DHCP или PPPoE, логин и пароль провайдера, а также возможную MAC-привязку."
               }
             }
           ]
@@ -170,6 +200,13 @@
         <a href="#xbox-dns" data-keywords="xbox dns udp ipv4 bootstrap">DNS для Xbox</a>
         <a href="#full-vpn" data-keywords="весь трафик vpn ip устройство playstation маршрутизация">Как пустить весь трафик через VPN?</a>
         <a href="#wi-fi-problem" data-keywords="wifi wi-fi вайфай не видит канал auto 2g 5g">Устройство не видит Wi‑Fi (2G / 5G)</a>
+        <a href="#backup-restore" data-keywords="backup бэкап резервная копия восстановление настройки архив">Резервная копия и восстановление</a>
+        <a href="#admin-password" data-keywords="пароль root администратор безопасность luci доступ">Пароль администратора</a>
+        <a href="#reset-access" data-keywords="сброс reset восстановить доступ кнопка перезагрузка 192.168.1.1">Сброс и восстановление доступа</a>
+        <a href="#podkop-diagnostics" data-keywords="podkop diagnostics диагностика vpn красная секция перезапуск сервис">Диагностика podkop и VPN</a>
+        <a href="#static-lease" data-keywords="ip static lease закрепить адрес устройство dhcp клиент">Закрепить IP устройства</a>
+        <a href="#provider-change" data-keywords="провайдер смена wan dhcp pppoe mac привязка логин пароль интернет">После смены провайдера</a>
+        <a href="#glossary" data-keywords="словарь термины wan lan dhcp pppoe dns vpn podkop vless urltest selector">Мини-словарь терминов</a>
         <a href="#faq" data-keywords="faq вопросы не открывается wan lan pppoe vpn">FAQ</a>
       </nav>
     </aside>
@@ -646,6 +683,352 @@
         </div>
       </article>
 
+      <article class="card" id="backup-restore">
+        <h2>Как сделать резервную копию и восстановить настройки</h2>
+        <div class="info-note">
+          <p>Делайте резервную копию перед сменой VPN, настройкой podkop, обновлением или экспериментами с сетью. Это самый простой способ быстро вернуться к рабочему состоянию.</p>
+        </div>
+        <ol>
+          <li>Откройте <strong>Система → Резервная копия / Обновление</strong>.</li>
+          <li>Нажмите кнопку создания архива и скачайте файл резервной копии на компьютер.</li>
+          <li>Переименуйте файл понятно, например <code>openwrt-before-vpn.zip</code>, и сохраните его в надёжном месте.</li>
+          <li>Для восстановления вернитесь в этот же раздел, загрузите архив резервной копии и примените восстановление.</li>
+          <li>После восстановления дождитесь перезагрузки роутера и снова откройте <code>http://192.168.1.1</code>.</li>
+        </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Если архив не скачивается, попробуйте другой браузер или отключите блокировщик загрузок.</li>
+            <li>Не восстанавливайте backup от другой модели роутера без необходимости.</li>
+            <li>Если после восстановления роутер не отвечает, подключитесь по LAN и подождите 2–3 минуты.</li>
+          </ul>
+        </div>
+        <div class="gallery">
+          <figure>
+            <picture>
+              <source srcset="assets/images/backup-settings-page.webp" type="image/webp">
+              <img src="assets/images/backup-settings-page.png" width="742" height="582" loading="lazy" alt="Раздел резервной копии и обновления OpenWrt">
+            </picture>
+            <figcaption>Откройте раздел <strong>Система → Резервная копия / Обновление</strong>.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/backup-download-archive.webp" type="image/webp">
+              <img src="assets/images/backup-download-archive.png" width="1270" height="820" loading="lazy" alt="Кнопка скачивания резервной копии OpenWrt">
+            </picture>
+            <figcaption>Скачайте архив резервной копии настроек на компьютер.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/backup-restore-upload.webp" type="image/webp">
+              <img src="assets/images/backup-restore-upload.png" width="1264" height="846" loading="lazy" alt="Форма загрузки архива для восстановления настроек OpenWrt">
+            </picture>
+            <figcaption>Для восстановления загрузите сохранённый backup-архив в этой форме.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="card" id="admin-password">
+        <h2>Как поменять пароль администратора</h2>
+        <div class="info-note">
+          <p>Стандартный пароль лучше поменять после первого подключения, особенно если к роутеру будут подключаться другие люди.</p>
+        </div>
+        <ol>
+          <li>Откройте <strong>Система → Администрирование</strong>.</li>
+          <li>Найдите блок смены пароля администратора.</li>
+          <li>Введите новый пароль два раза: в поле пароля и подтверждения.</li>
+          <li>Нажмите <strong>Сохранить</strong>, затем <strong>Применить</strong>.</li>
+          <li>Выйдите из админки и проверьте вход с новым паролем.</li>
+        </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Используйте пароль от 8 символов и сохраните его в менеджере паролей.</li>
+            <li>Проверьте раскладку клавиатуры и Caps Lock перед повторным входом.</li>
+            <li>Если пароль потерян, используйте раздел про сброс и восстановление доступа.</li>
+          </ul>
+        </div>
+        <div class="gallery">
+          <figure>
+            <picture>
+              <source srcset="assets/images/admin-system-page.webp" type="image/webp">
+              <img src="assets/images/admin-system-page.png" width="1267" height="398" loading="lazy" alt="Раздел администрирования в OpenWrt">
+            </picture>
+            <figcaption>Перейдите в <strong>Система → Администрирование</strong>.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/admin-password-fields.webp" type="image/webp">
+              <img src="assets/images/admin-password-fields.png" width="805" height="407" loading="lazy" alt="Поля ввода нового пароля администратора OpenWrt">
+            </picture>
+            <figcaption>Введите новый пароль администратора и повторите его во втором поле.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/admin-password-save.webp" type="image/webp">
+              <img src="assets/images/admin-password-save.png" width="1241" height="376" loading="lazy" alt="Кнопки сохранения и применения нового пароля OpenWrt">
+            </picture>
+            <figcaption>Сохраните изменение и примените настройки.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="card" id="reset-access">
+        <h2>Как сбросить роутер и восстановить доступ</h2>
+        <div class="info-note">
+          <p>Сброс используйте как крайний вариант: он удаляет текущие настройки интернета, Wi‑Fi, podkop и VPN. После чистого reset на OpenWrt Wi‑Fi сеть обычно не поднимается, поэтому подключиться к роутеру получится только по LAN-кабелю.</p>
+        </div>
+        <ol>
+          <li>Сначала попробуйте подключиться к роутеру по LAN-кабелю и открыть <code>http://192.168.1.1</code>.</li>
+          <li>Если админка не открывается, перезагрузите роутер питанием и подождите 2–3 минуты.</li>
+          <li>Если доступ всё ещё потерян, отключите питание роутера, зажмите кнопку <strong>Reset</strong>, включите питание и держите кнопку ещё 10–15 секунд.</li>
+          <li>Дождитесь, пока индикаторы моргнут: это признак, что сброс начался или уже применился.</li>
+          <li>После сброса подключитесь к роутеру <strong>только по LAN-кабелю</strong> и откройте <code>http://192.168.1.1</code>.</li>
+          <li>Перед восстановлением полной конфигурации установите недостающие пакеты podkop и AmneziaWG через SSH.</li>
+          <li>После установки пакетов восстановите backup через раздел резервной копии и дождитесь перезагрузки роутера.</li>
+        </ol>
+        <div class="info-note">
+          <p>Команды ниже запускайте после подключения по SSH к роутеру. Для OpenWrt надёжнее использовать вариант через <code>wget | sh</code>, потому что синтаксис <code>sh &lt;(wget ...)</code> зависит от bash и может не работать в стандартной shell-среде роутера.</p>
+        </div>
+        <div class="copy-block">
+          <pre><code id="amneziaInstallCommand">wget -O - https://raw.githubusercontent.com/Slava-Shchipunov/awg-openwrt/refs/heads/master/amneziawg-install.sh | sh</code></pre>
+          <button type="button" data-copy-target="#amneziaInstallCommand">Скопировать</button>
+        </div>
+        <div class="copy-block">
+          <pre><code id="podkopInstallCommand">wget -O - https://raw.githubusercontent.com/itdoginfo/podkop/refs/heads/main/install.sh | sh</code></pre>
+          <button type="button" data-copy-target="#podkopInstallCommand">Скопировать</button>
+        </div>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Если после сброса не видно Wi‑Fi, это ожидаемо: подключайтесь к роутеру кабелем в LAN-порт.</li>
+            <li>Если индикаторы не моргнули, повторите reset: питание выключено → кнопка зажата → питание включено → держать 10–15 секунд.</li>
+            <li>Если backup восстановился не полностью, сначала установите podkop и AmneziaWG, затем повторите восстановление настроек.</li>
+          </ul>
+        </div>
+        <div class="gallery">
+          <figure>
+            <picture>
+              <source srcset="assets/images/router-reset-button.webp" type="image/webp">
+              <img src="assets/images/router-reset-button.png" width="1280" height="720" loading="lazy" alt="Кнопка Reset на корпусе роутера">
+            </picture>
+            <figcaption>Кнопка <strong>Reset</strong> обычно утоплена в корпус, чтобы её не нажали случайно.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/reset-login-page.webp" type="image/webp">
+              <img src="assets/images/reset-login-page.png" width="744" height="315" loading="lazy" alt="Страница входа в OpenWrt после сброса настроек">
+            </picture>
+            <figcaption>После сброса откройте админку по адресу <code>192.168.1.1</code>, подключившись к роутеру по LAN-кабелю.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/backup-restore-upload.webp" type="image/webp">
+              <img src="assets/images/backup-restore-upload.png" width="1264" height="846" loading="lazy" alt="Загрузка backup-архива для восстановления OpenWrt">
+            </picture>
+            <figcaption>Перед восстановлением backup установите недостающие пакеты podkop и AmneziaWG.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="card" id="podkop-diagnostics">
+        <h2>Диагностика podkop и VPN</h2>
+        <div class="info-note">
+          <p>Если сайты не открываются через обход или VPN, сначала смотрите диагностику podkop. Она быстрее всего показывает, какая секция не работает.</p>
+        </div>
+        <ol>
+          <li>Откройте <strong>Службы → podkop → Диагностика</strong>.</li>
+          <li>Проверьте, нет ли красных секций или ошибок рядом с нужным подключением.</li>
+          <li>Если секция красная, проверьте конфиг VPN, домены и доступность сервера.</li>
+          <li>Перезапустите podkop из диагностики или примените настройки повторно.</li>
+          <li>После перезапуска проверьте проблемный сайт в режиме инкогнито.</li>
+        </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Красная секция часто означает ошибку в конфиге, недоступный сервер или неверный протокол.</li>
+            <li>Если меняли домены, убедитесь, что они указаны без <code>https://</code>.</li>
+            <li>Если не работает только один сайт, сначала добавьте его домен в пользовательский список.</li>
+          </ul>
+        </div>
+        <div class="gallery">
+          <figure>
+            <picture>
+              <source srcset="assets/images/podkop-diagnostics-page.webp" type="image/webp">
+              <img src="assets/images/podkop-diagnostics-page.png" width="1255" height="1116" loading="lazy" alt="Страница диагностики podkop в OpenWrt">
+            </picture>
+            <figcaption>Откройте <strong>Службы → podkop → Диагностика</strong> и проверьте состояние секций.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/podkop-main-error.webp" type="image/webp">
+              <img src="assets/images/podkop-main-error.png" width="655" height="551" loading="lazy" alt="Красная секция с ошибкой main в диагностике podkop">
+            </picture>
+            <figcaption>Красная секция показывает, где именно podkop или VPN сейчас не проходит проверку.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/podkop-restart-service.webp" type="image/webp">
+              <img src="assets/images/podkop-restart-service.png" width="1248" height="1114" loading="lazy" alt="Кнопка перезапуска сервиса podkop">
+            </picture>
+            <figcaption>После исправления настроек перезапустите podkop и проверьте диагностику ещё раз.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="card" id="static-lease">
+        <h2>Как закрепить IP устройства</h2>
+        <div class="info-note">
+          <p>Закреплённый IP нужен, если вы хотите пустить конкретное устройство через VPN, настроить правила для приставки, телевизора, камеры или умного дома.</p>
+        </div>
+        <ol>
+          <li>Откройте главную страницу админки или список подключённых устройств.</li>
+          <li>Найдите нужное устройство по имени, MAC-адресу или текущему IP.</li>
+          <li>Нажмите <strong>Закрепить IP</strong> рядом с нужным устройством.</li>
+          <li>Сохраните и примените настройки.</li>
+          <li>Переподключите устройство к сети и проверьте, что IP не изменился.</li>
+        </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Если непонятно, какое устройство нужное, отключите его от Wi‑Fi и посмотрите, какая строка исчезла.</li>
+            <li>Проверьте, что закрепляете IP в той же сети, где находится устройство.</li>
+            <li>После закрепления перезагрузите устройство или переподключите его к Wi‑Fi.</li>
+          </ul>
+        </div>
+        <div class="gallery">
+          <figure>
+            <picture>
+              <source srcset="assets/images/static-lease-clients-list.webp" type="image/webp">
+              <img src="assets/images/static-lease-clients-list.png" width="1291" height="1269" loading="lazy" alt="Список подключённых устройств в OpenWrt">
+            </picture>
+            <figcaption>Найдите устройство в списке клиентов по имени, MAC-адресу или текущему IP.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/static-lease-add-button.webp" type="image/webp">
+              <img src="assets/images/static-lease-add-button.png" width="403" height="518" loading="lazy" alt="Кнопка закрепления IP для устройства в OpenWrt">
+            </picture>
+            <figcaption>Нажмите кнопку закрепления IP рядом с нужным устройством.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/static-lease-result.webp" type="image/webp">
+              <img src="assets/images/static-lease-result.png" width="1231" height="276" loading="lazy" alt="Устройство после закрепления IP-адреса в OpenWrt">
+            </picture>
+            <figcaption>После применения настроек устройство должно появиться с закреплённым адресом.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="card" id="provider-change">
+        <h2>Что делать после смены провайдера</h2>
+        <div class="info-note">
+          <p>После смены провайдера чаще всего нужно заново настроить WAN: выбрать DHCP или PPPoE, ввести логин/пароль или обновить MAC-привязку.</p>
+        </div>
+        <ol>
+          <li>Подключите кабель нового провайдера в <strong>WAN</strong> порт роутера.</li>
+          <li>Уточните у провайдера тип подключения: <strong>DHCP</strong> или <strong>PPPoE</strong>.</li>
+          <li>Если используется DHCP, проверьте, получает ли WAN-интерфейс IP-адрес автоматически.</li>
+          <li>Если используется PPPoE, введите новый логин и пароль в настройках WAN.</li>
+          <li>Если у провайдера есть MAC-привязка, позвоните в поддержку и попросите обновить MAC-адрес роутера.</li>
+          <li>Сохраните, примените настройки и подождите 1–2 минуты.</li>
+        </ol>
+        <div class="troubleshoot">
+          <h3>Если не получилось</h3>
+          <ul>
+            <li>Проверьте, что новый кабель подключен именно в WAN, а не в LAN.</li>
+            <li>Сверьте PPPoE-логин и пароль с договором или личным кабинетом провайдера.</li>
+            <li>Если WAN не получает IP по DHCP, уточните MAC-привязку у провайдера.</li>
+          </ul>
+        </div>
+        <div class="gallery">
+          <figure>
+            <picture>
+              <source srcset="assets/images/provider-wan-interface.webp" type="image/webp">
+              <img src="assets/images/provider-wan-interface.png" width="1269" height="856" loading="lazy" alt="WAN-интерфейс в разделе сети OpenWrt">
+            </picture>
+            <figcaption>Откройте WAN-интерфейс в разделе <strong>Сеть → Интерфейсы</strong>.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/provider-wan-protocol.webp" type="image/webp">
+              <img src="assets/images/provider-wan-protocol.png" width="937" height="541" loading="lazy" alt="Выбор протокола DHCP или PPPoE для WAN в OpenWrt">
+            </picture>
+            <figcaption>Выберите протокол подключения, который указал новый провайдер: DHCP или PPPoE.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/provider-pppoe-credentials.webp" type="image/webp">
+              <img src="assets/images/provider-pppoe-credentials.png" width="929" height="791" loading="lazy" alt="Поля логина и пароля PPPoE для WAN в OpenWrt">
+            </picture>
+            <figcaption>Для PPPoE введите логин и пароль из договора или личного кабинета провайдера.</figcaption>
+          </figure>
+          <figure>
+            <picture>
+              <source srcset="assets/images/provider-wan-mac-address.webp" type="image/webp">
+              <img src="assets/images/provider-wan-mac-address.png" width="1266" height="870" loading="lazy" alt="MAC-адрес WAN-интерфейса в OpenWrt">
+            </picture>
+            <figcaption>Если у провайдера есть MAC-привязка, сообщите в поддержку MAC-адрес WAN.</figcaption>
+          </figure>
+        </div>
+      </article>
+
+      <article class="card glossary-card" id="glossary">
+        <h2>Мини-словарь терминов</h2>
+        <p>Короткие расшифровки терминов, которые встречаются в инструкции и настройках OpenWrt.</p>
+        <dl class="glossary-list">
+          <div>
+            <dt>WAN</dt>
+            <dd>Порт и интерфейс для кабеля провайдера. Через него роутер получает интернет.</dd>
+          </div>
+          <div>
+            <dt>LAN</dt>
+            <dd>Локальная сеть дома: компьютеры, телевизоры, приставки и другие устройства за роутером.</dd>
+          </div>
+          <div>
+            <dt>DHCP</dt>
+            <dd>Автоматическая выдача сетевых настроек. У провайдера часто означает подключение без логина и пароля.</dd>
+          </div>
+          <div>
+            <dt>PPPoE</dt>
+            <dd>Тип подключения, где нужен логин и пароль от провайдера.</dd>
+          </div>
+          <div>
+            <dt>DNS</dt>
+            <dd>Сервис, который переводит адрес сайта вроде <code>example.com</code> в IP-адрес.</dd>
+          </div>
+          <div>
+            <dt>VPN</dt>
+            <dd>Подключение, которое отправляет трафик через другой сервер или страну.</dd>
+          </div>
+          <div>
+            <dt>podkop</dt>
+            <dd>Сервис на роутере для маршрутизации выбранных доменов или устройств через нужное подключение.</dd>
+          </div>
+          <div>
+            <dt>VLESS</dt>
+            <dd>Один из протоколов VPN/прокси, который часто используется в готовых конфигурациях.</dd>
+          </div>
+          <div>
+            <dt>URLTest</dt>
+            <dd>Режим автоматического выбора конфигурации с лучшей доступностью или меньшей задержкой.</dd>
+          </div>
+          <div>
+            <dt>Selector</dt>
+            <dd>Режим ручного выбора нужной VPN-конфигурации или локации.</dd>
+          </div>
+        </dl>
+        <div class="troubleshoot">
+          <h3>Если термин всё ещё непонятен</h3>
+          <ul>
+            <li>Воспользуйтесь поиском по инструкции: многие термины встречаются в практических разделах выше.</li>
+            <li>Если в интерфейсе OpenWrt название отличается, ориентируйтесь на английский термин: WAN, LAN, DHCP, PPPoE или DNS.</li>
+            <li>Для VPN-терминов сначала смотрите разделы про podkop, VLESS, URLTest и Selector.</li>
+          </ul>
+        </div>
+      </article>
+
       <article class="card faq-card" id="faq">
         <h2>FAQ</h2>
         <details>
@@ -667,6 +1050,18 @@
         <details>
           <summary>Что делать, если VPN не заработал?</summary>
           <p>Проверьте конфиг, примените настройки, откройте диагностику podkop и убедитесь, что нужная секция не горит красным. Если нужно, перезапустите сервис.</p>
+        </details>
+        <details>
+          <summary>Зачем делать резервную копию настроек?</summary>
+          <p>Backup позволяет быстро вернуть рабочую конфигурацию после неудачных изменений, сброса или смены провайдера.</p>
+        </details>
+        <details>
+          <summary>Как восстановить доступ после сброса?</summary>
+          <p>После reset Wi‑Fi на OpenWrt обычно не поднимается, поэтому подключитесь к роутеру по LAN-кабелю и откройте <code>http://192.168.1.1</code>. Перед полным восстановлением backup установите через SSH недостающие пакеты podkop и AmneziaWG.</p>
+        </details>
+        <details>
+          <summary>Что проверить после смены провайдера?</summary>
+          <p>Проверьте WAN-кабель, тип подключения DHCP или PPPoE, логин и пароль провайдера, а также возможную MAC-привязку.</p>
         </details>
       </article>
 

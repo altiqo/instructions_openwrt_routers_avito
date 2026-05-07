@@ -519,6 +519,49 @@ figcaption {
   line-height: 1.35;
 }
 
+.image-placeholder {
+  border-style: dashed;
+}
+
+.image-placeholder__frame {
+  min-height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  color: var(--muted);
+  text-align: center;
+  font-weight: 800;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent-2) 9%, transparent), color-mix(in srgb, var(--accent) 7%, transparent)),
+    repeating-linear-gradient(135deg, transparent 0, transparent 12px, rgba(255, 255, 255, 0.04) 12px, rgba(255, 255, 255, 0.04) 24px);
+}
+
+.glossary-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.glossary-list div {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 13px 14px;
+  background: var(--surface);
+}
+
+.glossary-list dt {
+  margin: 0 0 5px;
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.glossary-list dd {
+  margin: 0;
+  color: var(--muted);
+}
+
 img {
   display: block;
   width: 100%;
