@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG</title>
-  <meta name="description" content="Пошаговая инструкция по настройке роутера с OpenWrt: вход в админку, интернет, Wi‑Fi, podkop, AmneziaWG, DNS для Xbox и VPN." />
+  <meta name="description" content="Пошаговая инструкция по настройке роутера с OpenWrt: вход в админку, интернет, Wi‑Fi, podkop, AmneziaWG, обновление DNS в podkop, DNS для Xbox и VPN." />
   <meta property="og:title" content="Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG" />
-  <meta property="og:description" content="Пошаговая настройка роутера OpenWrt: вход в админку, интернет, Wi‑Fi, VPN, podkop, AmneziaWG и DNS для Xbox." />
+  <meta property="og:description" content="Пошаговая настройка роутера OpenWrt: вход в админку, интернет, Wi‑Fi, VPN, podkop, AmneziaWG и DNS в podkop." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ru_RU" />
   <meta property="og:url" content="https://altiqo.github.io/instructions_openwrt_routers_avito/" />
@@ -16,7 +16,7 @@
   <meta property="og:image:alt" content="Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG" />
-  <meta name="twitter:description" content="Пошаговая настройка роутера OpenWrt: вход в админку, интернет, Wi‑Fi, VPN, podkop, AmneziaWG и DNS для Xbox." />
+  <meta name="twitter:description" content="Пошаговая настройка роутера OpenWrt: вход в админку, интернет, Wi‑Fi, VPN, podkop, AmneziaWG и DNS в podkop." />
   <meta name="twitter:image" content="https://altiqo.github.io/instructions_openwrt_routers_avito/assets/images/og-openwrt-guide.png" />
   <meta name="twitter:image:alt" content="Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG" />
   <meta name="google-site-verification" content="SioJsg0R5NN3PpxUw4Qm444PWVDwci5ULDCUDSfQEpY" />
@@ -47,7 +47,7 @@
           "@id": "https://altiqo.github.io/instructions_openwrt_routers_avito/#webpage",
           "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/",
           "name": "Инструкция OpenWrt: Wi‑Fi, VPN, podkop и AmneziaWG",
-          "description": "Пошаговая инструкция по настройке роутера с OpenWrt: вход в админку, интернет, Wi‑Fi, podkop, AmneziaWG, DNS для Xbox и VPN.",
+          "description": "Пошаговая инструкция по настройке роутера с OpenWrt: вход в админку, интернет, Wi‑Fi, podkop, AmneziaWG, обновление DNS в podkop, DNS для Xbox и VPN.",
           "inLanguage": "ru-RU",
           "image": "https://altiqo.github.io/instructions_openwrt_routers_avito/assets/images/og-openwrt-guide.png"
         },
@@ -55,7 +55,7 @@
           "@type": "HowTo",
           "@id": "https://altiqo.github.io/instructions_openwrt_routers_avito/#howto",
           "name": "Как настроить роутер с OpenWrt",
-          "description": "Инструкция по базовой настройке OpenWrt, Wi‑Fi, VPN, podkop, AmneziaWG и DNS для Xbox.",
+          "description": "Инструкция по базовой настройке OpenWrt, Wi‑Fi, VPN, podkop, AmneziaWG, обновлению DNS в podkop и DNS для Xbox.",
           "inLanguage": "ru-RU",
           "totalTime": "PT30M",
           "step": [
@@ -64,6 +64,7 @@
             { "@type": "HowToStep", "name": "Настроить подключение", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#conn", "text": "Выберите тип подключения WAN и введите данные провайдера при PPPoE." },
             { "@type": "HowToStep", "name": "Настроить Wi‑Fi", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#wifi", "text": "Измените имя сети и пароль для 2.4G и 5G сетей." },
             { "@type": "HowToStep", "name": "Настроить обход и VPN", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#bypass", "text": "Добавьте домены в podkop или настройте собственный VPN." },
+            { "@type": "HowToStep", "name": "Обновить DNS в podkop", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#podkop-dns-update", "text": "Если открываются только прямые сайты или только сайты через VPN, выберите UDP незащищенный и укажите DNS-серверы в настройках podkop." },
             { "@type": "HowToStep", "name": "Сделать резервную копию", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#backup-restore", "text": "Скачайте архив настроек OpenWrt перед серьёзными изменениями и сохраните его в безопасном месте." },
             { "@type": "HowToStep", "name": "Сменить пароль администратора", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#admin-password", "text": "Откройте раздел администрирования и задайте новый пароль root." },
             { "@type": "HowToStep", "name": "Сбросить роутер и восстановить доступ", "url": "https://altiqo.github.io/instructions_openwrt_routers_avito/#reset-access", "text": "После reset подключайтесь по LAN-кабелю, заново установите недостающие пакеты podkop и AmneziaWG, затем восстанавливайте настройки." },
@@ -116,6 +117,14 @@
               "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "Проверьте корректность конфигурации, примените настройки, перезапустите podkop или VPN-сервис и посмотрите диагностику."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Почему открываются только прямые сайты или только сайты через VPN",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Часто это похоже на проблему DNS в podkop: выберите UDP незащищенный, укажите DNS-сервер и Bootstrap DNS-сервер, примените настройки и перезапустите podkop."
               }
             },
             {
@@ -206,6 +215,7 @@
         <a href="#custom-vpn" data-keywords="vpn vless proxy podkop свой">Свой VPN</a>
         <a href="#some-vless-vpn" data-keywords="vless urltest selector несколько конфигураций vpn">Несколько конфигураций VLESS VPN</a>
         <a href="#amnezia" class="toc-link-important" data-keywords="amneziawg amnezia youtube instagram ркн warp">Перестал работать YouTube, Instagram и другие сайты в блоке</a>
+        <a href="#podkop-dns-update" data-keywords="podkop dns udp незащищенный doh bootstrap яндекс 77.88.8.8 77.88.8.1 сайты не открываются">Обновить DNS в podkop</a>
         <a href="#xbox-dns" data-keywords="xbox dns udp ipv4 bootstrap">DNS для Xbox</a>
         <a href="#full-vpn" data-keywords="весь трафик vpn ip устройство playstation маршрутизация">Как пустить весь трафик через VPN?</a>
         <a href="#wi-fi-problem" data-keywords="wifi wi-fi вайфай не видит канал auto 2g 5g">Устройство не видит Wi‑Fi (2G / 5G)</a>
@@ -575,11 +585,65 @@
         </div>
       </article>
       
+      <article class="card" id="podkop-dns-update">
+        <h2>Как обновить DNS в podkop, если часть сайтов не открывается</h2>
+        <div class="info-note">
+          <p>DNS в podkop отвечает за то, как роутер узнаёт IP-адреса сайтов перед маршрутизацией. Если DNS отвечает нестабильно или выбранный протокол не проходит у провайдера, podkop может быть включён, но одна часть сайтов всё равно не будет открываться.</p>
+        </div>
+        <p>Обычно это выглядит одним из двух способов:</p>
+        <ul>
+          <li>Российские сайты открываются напрямую, но сайты, которые должны идти через VPN или обход, не загружаются.</li>
+          <li>Или наоборот: открываются только заблокированные сайты через VPN, а обычные сайты напрямую не открываются.</li>
+        </ul>
+        <div class="troubleshoot">
+          <h3>Как понять, что проблема именно в DNS</h3>
+          <ul>
+            <li>В браузере появляются ошибки вроде <code>DNS_PROBE_FINISHED_NXDOMAIN</code>, <code>ERR_NAME_NOT_RESOLVED</code> или похожие сообщения про DNS.</li>
+            <li>Проблема повторяется на нескольких устройствах в вашей Wi‑Fi сети, а не только на одном телефоне или компьютере.</li>
+            <li>Если нужная секция в диагностике podkop красная, сначала проверяйте VPN-конфиг или сервер. DNS чаще подозреваем, когда диагностика выглядит нормально, но сайты всё равно не открываются по доменным именам.</li>
+            <li>Если проверить разные сайты, видно разделение: работает только прямой интернет или только сайты, которые уходят через VPN.</li>
+            <li>После смены DNS в podkop и перезапуска сервиса ситуация меняется сразу или после переподключения устройства к Wi‑Fi.</li>
+          </ul>
+        </div>
+        <ol>
+          <li>Откройте <strong>Службы → podkop → Настройки</strong>.</li>
+          <li>В поле <strong>Тип протокола DNS</strong> выберите <strong>UDP незащищенный</strong>. Для обхода он часто работает стабильнее, чем DoH.</li>
+          <li>В поле <strong>DNS-сервер</strong> укажите <span class="copy-chip"><code>77.88.8.8</code><button type="button" data-copy-value="77.88.8.8">Скопировать</button></span>.</li>
+          <li>В поле <strong>Bootstrap DNS-сервер</strong> укажите <span class="copy-chip"><code>77.88.8.1</code><button type="button" data-copy-value="77.88.8.1">Скопировать</button></span>.</li>
+          <li>Сохраните и примените изменения.</li>
+          <li>Откройте <strong>Службы → podkop → Диагностика</strong>, перезапустите podkop и проверьте проблемные сайты ещё раз.</li>
+        </ol>
+        <div class="troubleshoot">
+          <h3>Что можно указать в DNS</h3>
+          <ul>
+            <li><code>77.88.8.8</code> и <code>77.88.8.1</code> — DNS Яндекса. Их можно использовать как простой рабочий вариант.</li>
+            <li>Можно попробовать и другие DNS-серверы, если они у вас стабильно работают или нужны под конкретную задачу.</li>
+            <li>DoH шифрует DNS-запросы, но для обхода может быть менее стабильным: если DoH-сервер или bootstrap-цепочка недоступны, сайты начинают открываться выборочно.</li>
+            <li>UDP незащищенный не шифрует DNS, зато часто проще проходит у провайдера и быстрее помогает проверить, что проблема была именно в DNS.</li>
+            <li>Если после применения ничего не изменилось, переподключите устройство к Wi‑Fi или перезагрузите его: старый DNS-ответ мог остаться в кэше.</li>
+          </ul>
+        </div>
+        <div class="gallery">
+          <figure class="image-placeholder" data-image-base="podkop-dns-settings" data-image-width="1200" data-image-height="760" data-image-alt="Переход в настройки podkop для изменения DNS">
+            <div class="image-placeholder__frame">Скриншот: Службы → podkop → Настройки<br><code>podkop-dns-settings.png</code> / <code>.webp</code></div>
+            <figcaption>Откройте общие настройки podkop.</figcaption>
+          </figure>
+          <figure class="image-placeholder" data-image-base="podkop-dns-udp" data-image-width="1200" data-image-height="760" data-image-alt="Выбор UDP незащищенного протокола DNS в podkop">
+            <div class="image-placeholder__frame">Скриншот: Тип протокола DNS — UDP незащищенный<br><code>podkop-dns-udp.png</code> / <code>.webp</code></div>
+            <figcaption>Выберите <strong>UDP незащищенный</strong> вместо DoH.</figcaption>
+          </figure>
+          <figure class="image-placeholder" data-image-base="podkop-dns-servers" data-image-width="1200" data-image-height="760" data-image-alt="Поля DNS-сервер и Bootstrap DNS-сервер в podkop">
+            <div class="image-placeholder__frame">Скриншот: DNS-сервер и Bootstrap DNS-сервер<br><code>podkop-dns-servers.png</code> / <code>.webp</code></div>
+            <figcaption>Заполните DNS-сервер и Bootstrap DNS-сервер, затем примените настройки.</figcaption>
+          </figure>
+        </div>
+      </article>
+
       <article class="card" id="xbox-dns">
         <h2>Как прописать DNS для Xbox?</h2>
         <ol>
           <li>Откройте <strong>Службы → podkop → Настройки</strong>.</li>
-          <li>Ставим <strong>Тип протокола DNS</strong> — UDP.</li>
+          <li>Ставим <strong>Тип протокола DNS</strong> — UDP незащищенный.</li>
           <li>Переходим на сайт <a href="https://xbox-dns.ru/" target="_blank" rel="noopener noreferrer">xbox-dns.ru</a> и копируем там <strong>Основной (IPv4)</strong> и <strong>Дополнительный (IPv4)</strong>.</li>
           <li>Прописываем основной DNS в <strong>DNS-сервер</strong> и дополнительный в <strong>Bootstrap DNS-сервер</strong>.</li>
           <li>Примените изменения.</li>
@@ -587,7 +651,7 @@
         <div class="troubleshoot">
           <h3>Если не получилось</h3>
           <ul>
-            <li>Проверьте, что выбран протокол DNS — UDP.</li>
+            <li>Проверьте, что выбран протокол DNS — UDP незащищенный.</li>
             <li>Сверьте основной и дополнительный IPv4 DNS с сайтом xbox-dns.ru.</li>
             <li>Перезагрузите Xbox или переподключите его к сети после применения настроек.</li>
           </ul>
@@ -1005,7 +1069,7 @@
           </div>
           <div>
             <dt>DNS</dt>
-            <dd>Сервис, который переводит адрес сайта вроде <code>example.com</code> в IP-адрес.</dd>
+            <dd>Сервис, который переводит адрес сайта вроде <code>example.com</code> в IP-адрес. Если DNS в podkop работает нестабильно, сайты могут открываться только напрямую или только через VPN.</dd>
           </div>
           <div>
             <dt>VPN</dt>
@@ -1059,6 +1123,10 @@
         <details>
           <summary>Что делать, если VPN не заработал?</summary>
           <p>Проверьте конфиг, примените настройки, откройте диагностику podkop и убедитесь, что нужная секция не горит красным. Если нужно, перезапустите сервис.</p>
+        </details>
+        <details>
+          <summary>Почему открываются только прямые сайты или только сайты через VPN?</summary>
+          <p>Часто это похоже на проблему DNS в podkop. Откройте <strong>Службы → podkop → Настройки</strong>, выберите <strong>UDP незащищенный</strong>, укажите DNS-сервер и Bootstrap DNS-сервер, примените настройки и перезапустите podkop.</p>
         </details>
         <details>
           <summary>Зачем делать резервную копию настроек?</summary>
@@ -1569,7 +1637,6 @@
       const modal = document.getElementById("imageModal");
       const modalImg = document.getElementById("imageModalContent");
       const modalClose = document.getElementById("imageModalClose");
-      const galleryImages = document.querySelectorAll(".gallery img");
 
       function openModal(img) {
         modalImg.src = img.currentSrc || img.src;
@@ -1586,7 +1653,8 @@
         document.body.classList.remove("modal-open");
       }
 
-      galleryImages.forEach(function (img) {
+      function enableImageZoom(img) {
+        if (img.dataset.zoomReady === "true") return;
         img.classList.add("zoomable");
         img.tabIndex = 0;
         img.addEventListener("click", function () { openModal(img); });
@@ -1595,6 +1663,57 @@
             e.preventDefault();
             openModal(img);
           }
+        });
+        img.dataset.zoomReady = "true";
+      }
+
+      document.querySelectorAll(".gallery img").forEach(enableImageZoom);
+
+      document.querySelectorAll("figure[data-image-base]").forEach(function (figure) {
+        const imageBase = figure.dataset.imageBase;
+        if (!imageBase) return;
+
+        const pngSrc = "assets/images/" + imageBase + ".png";
+        const webpSrc = "assets/images/" + imageBase + ".webp";
+
+        function probeImage(src) {
+          return new Promise(function (resolve) {
+            const image = new Image();
+            image.addEventListener("load", function () { resolve(image); });
+            image.addEventListener("error", function () { resolve(null); });
+            image.src = src;
+          });
+        }
+
+        Promise.all([probeImage(pngSrc), probeImage(webpSrc)]).then(function (images) {
+          const pngImage = images[0];
+          const webpImage = images[1];
+          if (!pngImage) return;
+
+          const picture = document.createElement("picture");
+          const source = document.createElement("source");
+          const img = document.createElement("img");
+          const placeholder = figure.querySelector(".image-placeholder__frame");
+
+          source.srcset = webpSrc;
+          source.type = "image/webp";
+          img.src = pngSrc;
+          img.width = Number(figure.dataset.imageWidth) || pngImage.naturalWidth;
+          img.height = Number(figure.dataset.imageHeight) || pngImage.naturalHeight;
+          img.loading = "lazy";
+          img.alt = figure.dataset.imageAlt || "";
+
+          if (webpImage) {
+            picture.append(source);
+          }
+          picture.append(img);
+          if (placeholder) {
+            placeholder.replaceWith(picture);
+          } else {
+            figure.insertBefore(picture, figure.firstChild);
+          }
+          figure.classList.remove("image-placeholder");
+          enableImageZoom(img);
         });
       });
 
