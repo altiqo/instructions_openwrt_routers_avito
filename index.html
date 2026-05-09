@@ -170,6 +170,7 @@
     <p class="hero-sub">Компактное руководство для быстрой настройки подключения, Wi‑Fi и VPN.</p>
     <div class="hero-actions">
       <a class="hero-btn" href="#toc">Перейти к разделам</a>
+      <button class="hero-btn" type="button" data-diagnostic-open>Самодиагностика</button>
       <a
         class="hero-btn"
         data-buy-router-link
@@ -204,6 +205,7 @@
         </div>
         <p class="toc-search__empty" id="tocSearchEmpty" hidden>Ничего не найдено</p>
       </div>
+      <button class="diagnostic-inline" type="button" data-diagnostic-open>Самодиагностика</button>
       <nav id="tocNav">
         <a href="#before-start" data-keywords="старт начало подготовка pppoe dhcp логин пароль">Перед началом</a>
         <a href="#admin" data-keywords="192.168.1.1 админка root пароль вход">Вход в админку</a>
@@ -1178,6 +1180,27 @@
     </a>
   </div>
 
+  <div class="diagnostic-popup" id="diagnosticPopup" aria-hidden="true">
+    <div class="diagnostic-popup__dialog" role="dialog" aria-modal="true" aria-labelledby="diagnosticTitle">
+      <div class="diagnostic-popup__top">
+        <div>
+          <p class="eyebrow">Помощник</p>
+          <h2 id="diagnosticTitle">Самодиагностика</h2>
+        </div>
+        <button class="diagnostic-popup__close" id="diagnosticClose" type="button" aria-label="Закрыть самодиагностику">×</button>
+      </div>
+      <div class="diagnostic-progress" aria-hidden="true">
+        <span class="diagnostic-progress__bar" id="diagnosticProgressBar"></span>
+      </div>
+      <p class="diagnostic-popup__step" id="diagnosticStep">Шаг 1 из 4</p>
+      <div class="diagnostic-popup__body" id="diagnosticBody" tabindex="-1"></div>
+      <div class="diagnostic-popup__footer">
+        <button class="diagnostic-popup__nav" id="diagnosticBack" type="button">Назад</button>
+        <button class="diagnostic-popup__nav" id="diagnosticRestart" type="button">Начать заново</button>
+      </div>
+    </div>
+  </div>
+
   <div class="review-popup" id="reviewPopup" aria-hidden="true">
     <div class="review-popup__dialog" role="dialog" aria-modal="true" aria-labelledby="reviewPopupTitle">
       <button class="review-popup__close" id="reviewPopupClose" type="button" aria-label="Закрыть окно отзыва">×</button>
@@ -1591,6 +1614,840 @@
           textarea.remove();
         }
       }
+
+      const diagnosticPopup = document.getElementById("diagnosticPopup");
+      const diagnosticBody = document.getElementById("diagnosticBody");
+      const diagnosticClose = document.getElementById("diagnosticClose");
+      const diagnosticBack = document.getElementById("diagnosticBack");
+      const diagnosticRestart = document.getElementById("diagnosticRestart");
+      const diagnosticStep = document.getElementById("diagnosticStep");
+      const diagnosticProgressBar = document.getElementById("diagnosticProgressBar");
+      const diagnosticOpenButtons = document.querySelectorAll("[data-diagnostic-open]");
+      let diagnosticCurrentId = "start";
+      let diagnosticHistory = [];
+      let diagnosticLastFocus = null;
+
+      const diagnosticQuestions = {
+        start: {
+          title: "С чем нужна помощь?",
+          hint: "Выберите самый похожий симптом. Помощник не меняет настройки, а подсказывает, что проверить и какой раздел открыть.",
+          options: [
+            { label: "Админка 192.168.1.1 или интернет", next: "connection-kind" },
+            { label: "Проблема с Wi-Fi", next: "wifi-kind" },
+            { label: "Не открывается сайт, YouTube или VPN", next: "podkop-scope" },
+            { label: "Одно устройство, приставка или ТВ", next: "device-entry" },
+            { label: "Сброс, backup, пароль или смена провайдера", next: "maintenance-kind" }
+          ]
+        },
+        "connection-kind": {
+          title: "Что именно не работает?",
+          hint: "Админка нужна для настройки роутера, а интернет проверяем через WAN и тип подключения.",
+          options: [
+            { label: "Не открывается 192.168.1.1", next: "admin-access" },
+            { label: "Интернет не работает", next: "internet-scope" },
+            { label: "Появляется страница логина провайдера", next: "result-dhcp-login" },
+            { label: "Проблема после смены провайдера", next: "result-provider-change" }
+          ]
+        },
+        "admin-access": {
+          title: "Что происходит при открытии 192.168.1.1?",
+          hint: "Лучше проверять с устройства, которое подключено к этому роутеру по Wi-Fi или LAN-кабелю.",
+          options: [
+            { label: "Страница вообще не открывается", next: "result-admin-unreachable" },
+            { label: "Открывается вход, но пароль не подходит", next: "result-admin-password" },
+            { label: "После сброса пропал Wi-Fi", next: "result-reset-access" },
+            { label: "Не уверен, куда вставлять кабель", next: "result-admin-unreachable" }
+          ]
+        },
+        "internet-scope": {
+          title: "Интернет не работает где?",
+          hint: "Это помогает понять, проблема в роутере или в конкретном устройстве.",
+          options: [
+            { label: "На всех устройствах", next: "internet-provider" },
+            { label: "Только на одном устройстве", next: "single-device" },
+            { label: "Появляется страница логина провайдера", next: "result-dhcp-login" },
+            { label: "После смены провайдера", next: "result-provider-change" }
+          ]
+        },
+        "internet-provider": {
+          title: "Что менялось перед проблемой?",
+          hint: "Если менялся провайдер или тип подключения, начинать нужно с WAN.",
+          options: [
+            { label: "Меняли провайдера или кабель", next: "result-provider-change" },
+            { label: "Провайдер просил PPPoE логин и пароль", next: "result-pppoe" },
+            { label: "Ничего не меняли, просто пропал интернет", next: "result-wan-basic" },
+            { label: "Не знаю тип подключения", next: "result-wan-basic" }
+          ]
+        },
+        "wifi-kind": {
+          title: "Что именно с Wi-Fi?",
+          hint: "Сеть 2.4G обычно видят почти все устройства, а 5G могут не видеть старые ТВ и телефоны.",
+          options: [
+            { label: "Устройство не видит сеть", next: "result-wifi-invisible" },
+            { label: "Нужно поменять имя или пароль", next: "result-wifi-settings" },
+            { label: "Не подключается только одно устройство", next: "single-device" },
+            { label: "После сброса Wi-Fi исчез", next: "result-reset-access" }
+          ]
+        },
+        "single-device": {
+          title: "Что это за проблема на одном устройстве?",
+          hint: "Если остальные устройства работают, сначала проверяем настройки самого телефона, ПК, ТВ или приставки.",
+          options: [
+            { label: "Не открываются сайты через обход/VPN", next: "podkop-one-device" },
+            { label: "Не видит Wi-Fi", next: "result-wifi-invisible" },
+            { label: "Нужен весь трафик через VPN", next: "result-full-vpn" },
+            { label: "Нужно закрепить IP", next: "result-static-lease" },
+            { label: "Xbox, PlayStation или ТВ", next: "device-kind" }
+          ]
+        },
+        "device-kind": {
+          title: "Какое устройство настраиваете?",
+          hint: "Для приставок и ТВ часто важнее DNS, закрепленный IP или маршрут всего трафика через VPN.",
+          options: [
+            { label: "Xbox", next: "result-xbox-dns" },
+            { label: "PlayStation", next: "result-full-vpn" },
+            { label: "Телевизор или ТВ-приставка", next: "result-full-vpn" },
+            { label: "Умное устройство или приложение", next: "result-static-lease" },
+            { label: "Оно просто не видит Wi-Fi", next: "result-wifi-invisible" }
+          ]
+        },
+        "device-entry": {
+          title: "Что ближе к вашей ситуации?",
+          hint: "Если проблема только на одном устройстве, сначала исключаем его локальные настройки.",
+          options: [
+            { label: "Проблема только на одном устройстве", next: "single-device" },
+            { label: "Xbox, PlayStation, ТВ или умное устройство", next: "device-kind" },
+            { label: "Нужен весь трафик через VPN", next: "result-full-vpn" },
+            { label: "Нужно закрепить IP", next: "result-static-lease" }
+          ]
+        },
+        "maintenance-kind": {
+          title: "Что нужно сделать?",
+          hint: "Эти сценарии лучше решать по инструкции, чтобы не потерять рабочие настройки.",
+          options: [
+            { label: "Сделать или восстановить backup", next: "result-backup" },
+            { label: "Сменить пароль администратора", next: "result-admin-password-change" },
+            { label: "Восстановить доступ после reset", next: "result-reset-access" },
+            { label: "Настроить после смены провайдера", next: "result-provider-change" }
+          ]
+        },
+        "podkop-scope": {
+          title: "Проблема с сайтом/VPN где проявляется?",
+          hint: "Если сломалось только одно устройство, часто виноваты его DNS, VPN или Secure DNS в браузере.",
+          options: [
+            { label: "На всех устройствах", next: "podkop-local" },
+            { label: "Только на одном устройстве", next: "podkop-one-device" },
+            { label: "Только один сайт", next: "result-one-site" },
+            { label: "YouTube, Instagram или похожий блок сайтов", next: "result-amnezia-block" }
+          ]
+        },
+        "podkop-one-device": {
+          title: "На этом устройстве есть свои DNS или VPN?",
+          hint: "Private DNS, Secure DNS, DNS-over-HTTPS и отдельный VPN могут обходить настройки роутера.",
+          options: [
+            { label: "Да, включен VPN / Private DNS / Secure DNS", next: "result-client-dns" },
+            { label: "Проблема только в браузере", next: "podkop-browser" },
+            { label: "Проблема и в браузере, и в приложениях", next: "result-client-route" },
+            { label: "Не знаю", next: "result-client-dns" }
+          ]
+        },
+        "podkop-browser": {
+          title: "Видите ошибку FakeIP или does not work in browser?",
+          hint: "В troubleshooting Podkop это отдельный сценарий: браузер может обходить DNS роутера.",
+          options: [
+            { label: "Да, похоже на FakeIP / browser", next: "result-fakeip-browser" },
+            { label: "Нет, просто сайт не открывается", next: "result-client-dns" },
+            { label: "Не уверен", next: "result-client-dns" }
+          ]
+        },
+        "podkop-local": {
+          title: "Диагностику Podkop открываете из домашней сети?",
+          hint: "Проверки Podkop корректнее запускать с устройства внутри сети этого роутера.",
+          options: [
+            { label: "Да, я дома в сети роутера", next: "podkop-diagnostics-state" },
+            { label: "Нет, удаленно или через другой интернет", next: "result-podkop-remote" },
+            { label: "Не знаю", next: "result-podkop-remote" }
+          ]
+        },
+        "podkop-diagnostics-state": {
+          title: "В диагностике Podkop есть красные ошибки?",
+          hint: "Красная секция обычно показывает, где именно сбой: DNS, sing-box, proxy или туннель.",
+          options: [
+            { label: "Да, есть красные секции", next: "result-podkop-red" },
+            { label: "Красных ошибок нет, но сайты не открываются", next: "podkop-problem-kind" },
+            { label: "Не могу найти диагностику", next: "result-podkop-diagnostics" }
+          ]
+        },
+        "podkop-problem-kind": {
+          title: "Что больше похоже на проблему?",
+          hint: "Если прямые сайты и VPN-сайты ведут себя по-разному, часто виноват DNS внутри Podkop.",
+          options: [
+            { label: "Открываются только прямые или только VPN-сайты", next: "result-podkop-dns" },
+            { label: "VLESS/SS ссылка не работает в Podkop", next: "podkop-proxy-check" },
+            { label: "WireGuard / AmneziaWG / OpenVPN не дает IP", next: "result-tunnel-broken" },
+            { label: "Не работает один конкретный сайт", next: "result-one-site" }
+          ]
+        },
+        "podkop-proxy-check": {
+          title: "Эта же VLESS/SS ссылка работает в другом клиенте?",
+          hint: "Например, на телефоне или в отдельном VPN-клиенте.",
+          options: [
+            { label: "Да, в другом клиенте работает", next: "result-proxy-format" },
+            { label: "Нет, не работает нигде", next: "result-proxy-dead" },
+            { label: "Не проверял", next: "result-proxy-format" }
+          ]
+        }
+      };
+
+      const diagnosticResults = {
+        "result-admin-unreachable": {
+          title: "Похоже, устройство не попадает в админку роутера",
+          summary: "Сначала убедитесь, что вы подключены именно к этому роутеру, а не к старой сети или мобильному интернету.",
+          steps: [
+            "Подключитесь к Wi-Fi этого роутера или используйте LAN-кабель.",
+            "Отключите VPN на телефоне или компьютере.",
+            "Откройте http://192.168.1.1 в другом браузере.",
+            "Если был reset, подключайтесь по LAN: Wi-Fi после сброса может не подняться."
+          ],
+          links: [
+            { label: "Вход в админку", href: "#admin" },
+            { label: "Сброс и восстановление доступа", href: "#reset-access" }
+          ]
+        },
+        "result-admin-password": {
+          title: "Проблема с паролем администратора",
+          summary: "Если стандартный пароль не подходит, пароль мог быть изменен. После reset доступ восстанавливается по отдельному сценарию.",
+          steps: [
+            "Проверьте раскладку клавиатуры и лишние пробелы.",
+            "Попробуйте пароль, который задавали при настройке.",
+            "Если доступа нет совсем, изучите раздел про reset и восстановление."
+          ],
+          links: [
+            { label: "Пароль администратора", href: "#admin-password" },
+            { label: "Сброс и восстановление доступа", href: "#reset-access" }
+          ]
+        },
+        "result-reset-access": {
+          title: "После reset действуйте через LAN-кабель",
+          summary: "На OpenWrt Wi-Fi после сброса часто не включается автоматически.",
+          steps: [
+            "Подключите компьютер кабелем в LAN-порт.",
+            "Откройте http://192.168.1.1.",
+            "Перед восстановлением backup установите недостающие пакеты podkop и AmneziaWG.",
+            "Затем восстановите настройки или настройте заново."
+          ],
+          links: [
+            { label: "Сброс и восстановление доступа", href: "#reset-access" },
+            { label: "Резервная копия", href: "#backup-restore" }
+          ]
+        },
+        "result-provider-change": {
+          title: "Начните с настройки WAN после смены провайдера",
+          summary: "Чаще всего нужно выбрать DHCP или PPPoE и учесть MAC-привязку.",
+          steps: [
+            "Подключите кабель нового провайдера в WAN.",
+            "Уточните у провайдера тип подключения: DHCP или PPPoE.",
+            "Если нужен PPPoE, подготовьте логин и пароль.",
+            "Если WAN не получает IP, спросите провайдера про MAC-привязку."
+          ],
+          links: [
+            { label: "После смены провайдера", href: "#provider-change" },
+            { label: "Смена типа подключения", href: "#conn" }
+          ]
+        },
+        "result-dhcp-login": {
+          title: "Похоже на страницу логина провайдера",
+          summary: "Интернет может работать через DHCP, но провайдер просит авторизацию или обновление MAC-адреса.",
+          steps: [
+            "Проверьте, что кабель провайдера вставлен в WAN.",
+            "Позвоните провайдеру и скажите, что заменили роутер.",
+            "Попросите обновить MAC-адрес, если у них есть привязка."
+          ],
+          links: [
+            { label: "DHCP и страница логина", href: "#dhcp" },
+            { label: "После смены провайдера", href: "#provider-change" }
+          ]
+        },
+        "result-pppoe": {
+          title: "Нужно проверить PPPoE-данные",
+          summary: "Если провайдер использует PPPoE, без правильного логина и пароля WAN не поднимется.",
+          steps: [
+            "Найдите PPPoE логин и пароль в договоре или личном кабинете.",
+            "Откройте WAN-интерфейс и выберите PPPoE.",
+            "Введите данные без лишних пробелов и примените настройки."
+          ],
+          links: [
+            { label: "Смена типа подключения", href: "#conn" },
+            { label: "После смены провайдера", href: "#provider-change" }
+          ]
+        },
+        "result-wan-basic": {
+          title: "Проверьте базовое подключение WAN",
+          summary: "Если интернет пропал везде, сначала исключаем кабель, тип подключения и данные провайдера.",
+          steps: [
+            "Убедитесь, что кабель провайдера вставлен в WAN.",
+            "Проверьте, получает ли WAN адрес автоматически или через PPPoE.",
+            "Перезагрузите роутер после применения настроек.",
+            "Если WAN не получает IP по DHCP, уточните MAC-привязку у провайдера."
+          ],
+          links: [
+            { label: "Смена типа подключения", href: "#conn" },
+            { label: "DHCP и страница логина", href: "#dhcp" },
+            { label: "FAQ", href: "#faq" }
+          ]
+        },
+        "result-wifi-invisible": {
+          title: "Устройство может не видеть канал Wi-Fi",
+          summary: "Частая причина: автоматический канал 2.4G или 5G выбран так, что устройство его не поддерживает.",
+          steps: [
+            "Проверьте, какую сеть не видит устройство: 2.4G или 5G.",
+            "Поставьте фиксированный канал вместо auto.",
+            "Примените настройки и переподключите устройство.",
+            "Если устройство старое, попробуйте 2.4G."
+          ],
+          links: [
+            { label: "Устройство не видит Wi-Fi", href: "#wi-fi-problem" },
+            { label: "Имя и пароль Wi-Fi", href: "#wifi" }
+          ]
+        },
+        "result-wifi-settings": {
+          title: "Меняйте имя и пароль в разделе Wi-Fi",
+          summary: "После смены имени или пароля устройства нужно подключить к сети заново.",
+          steps: [
+            "Откройте настройки беспроводной сети.",
+            "Измените имя и пароль для нужной сети.",
+            "Примените настройки.",
+            "На телефонах и ТВ удалите старую сеть и подключитесь заново."
+          ],
+          links: [
+            { label: "Имя и пароль Wi-Fi", href: "#wifi" }
+          ]
+        },
+        "result-client-dns": {
+          title: "Похоже, устройство обходит DNS роутера",
+          summary: "Private DNS, Secure DNS, DNS-over-HTTPS или отдельный VPN на устройстве могут мешать Podkop.",
+          steps: [
+            "Отключите VPN на проблемном устройстве.",
+            "Отключите Private DNS на Android или Secure DNS/DoH в браузере.",
+            "Подключитесь к Wi-Fi этого роутера заново.",
+            "Если не помогло, откройте диагностику Podkop с этого устройства."
+          ],
+          links: [
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" },
+            { label: "FAQ", href: "#faq" }
+          ],
+          advanced: {
+            intro: "На ПК можно проверить, получает ли устройство FakeIP от Podkop. Если адрес не из диапазона 198.18.x.x, DNS идет не через роутер.",
+            commands: [
+              "nslookup fakeip.podkop.fyi",
+              "curl -v https://fakeip.podkop.fyi/check"
+            ]
+          },
+          help: true
+        },
+        "result-client-route": {
+          title: "Похоже, трафик устройства не проходит через Podkop",
+          summary: "Если DNS правильный, но проверка сайта зависает, устройство может использовать не роутер как шлюз.",
+          steps: [
+            "Переподключите устройство к Wi-Fi роутера.",
+            "Отключите ручные IP, DNS и VPN на устройстве.",
+            "Проверьте, что проблема повторяется в режиме инкогнито.",
+            "Затем смотрите диагностику Podkop."
+          ],
+          links: [
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" },
+            { label: "Закрепить IP устройства", href: "#static-lease" }
+          ],
+          advanced: {
+            intro: "Если curl зависает, вероятно трафик не идет через sing-box или роутер не является шлюзом для устройства.",
+            commands: [
+              "nslookup fakeip.podkop.fyi",
+              "curl -v https://fakeip.podkop.fyi/check",
+              "/usr/bin/podkop global_check"
+            ]
+          },
+          help: true
+        },
+        "result-fakeip-browser": {
+          title: "Браузер может обходить настройки роутера",
+          summary: "Для FakeIP-сценариев Podkop важно, чтобы браузер не использовал свой Secure DNS или DNS-over-HTTPS.",
+          steps: [
+            "Отключите Secure DNS или DNS-over-HTTPS в браузере.",
+            "Откройте сайт в режиме инкогнито.",
+            "Проверьте этот же сайт в другом браузере.",
+            "Если в приложениях работает, а в браузере нет, проблема почти наверняка в DNS браузера."
+          ],
+          links: [
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" },
+            { label: "Обновить DNS в podkop", href: "#podkop-dns-update" }
+          ],
+          advanced: {
+            intro: "Если nslookup возвращает 198.18.x.x, DNS идет через Podkop. Если curl проходит, а браузер нет, проверьте Secure DNS в браузере.",
+            commands: [
+              "nslookup fakeip.podkop.fyi",
+              "curl -v https://fakeip.podkop.fyi/check"
+            ]
+          }
+        },
+        "result-podkop-remote": {
+          title: "Диагностику нужно запускать из домашней сети",
+          summary: "Проверки Podkop показывают корректную картину, когда устройство находится за этим роутером.",
+          steps: [
+            "Подключитесь к Wi-Fi этого роутера или к LAN.",
+            "Откройте диагностику Podkop с этого устройства.",
+            "Проверьте, есть ли красные секции.",
+            "Если просите помощи, приложите скриншот диагностики."
+          ],
+          links: [
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" }
+          ],
+          help: true
+        },
+        "result-podkop-red": {
+          title: "Красная секция в диагностике указывает место сбоя",
+          summary: "Сначала исправляйте именно красный блок: DNS, sing-box, proxy, туннель или доступность сервера.",
+          steps: [
+            "Откройте раздел диагностики Podkop.",
+            "Посмотрите название красной секции и текст ошибки.",
+            "Перезапустите Podkop после исправления настроек.",
+            "Если краснеет proxy или туннель, проверьте саму VPN-конфигурацию."
+          ],
+          links: [
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" },
+            { label: "Свой VPN", href: "#custom-vpn" },
+            { label: "AmneziaWG", href: "#amnezia" }
+          ],
+          advanced: {
+            intro: "Для обращения за помощью полезен общий чек Podkop и логи.",
+            commands: [
+              "/usr/bin/podkop global_check"
+            ]
+          },
+          help: true
+        },
+        "result-podkop-diagnostics": {
+          title: "Начните с вкладки Диагностика Podkop",
+          summary: "Она быстрее всего показывает, какая часть обхода не работает.",
+          steps: [
+            "Откройте Службы -> podkop -> Диагностика.",
+            "Проверьте, нет ли красных секций.",
+            "После изменений перезапустите Podkop.",
+            "Проверьте проблемный сайт в режиме инкогнито."
+          ],
+          links: [
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" }
+          ]
+        },
+        "result-podkop-dns": {
+          title: "Похоже на проблему DNS в Podkop",
+          summary: "Если открываются только прямые сайты или только сайты через VPN, начните с DNS-настроек Podkop.",
+          steps: [
+            "Откройте настройки Podkop.",
+            "Выберите UDP незащищенный для проверки.",
+            "Укажите DNS-сервер и Bootstrap DNS-сервер.",
+            "Примените настройки и перезапустите Podkop."
+          ],
+          links: [
+            { label: "Обновить DNS в podkop", href: "#podkop-dns-update" },
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" }
+          ],
+          advanced: {
+            intro: "Если nslookup не возвращает 198.18.x.x, клиент использует DNS не роутера.",
+            commands: [
+              "nslookup fakeip.podkop.fyi",
+              "/usr/bin/podkop global_check"
+            ]
+          }
+        },
+        "result-one-site": {
+          title: "Если не работает один сайт, добавьте его домен в обход",
+          summary: "Для одного сайта чаще всего нужно прописать домен без https:// и проверить диагностику.",
+          steps: [
+            "Добавьте домен сайта в пользовательский список Podkop.",
+            "Пишите домен без https:// и без лишнего пути.",
+            "Примените настройки и перезапустите Podkop.",
+            "Если сайт все равно не открывается, проверьте DNS."
+          ],
+          links: [
+            { label: "Добавить сайт в обход", href: "#bypass" },
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" },
+            { label: "Обновить DNS в podkop", href: "#podkop-dns-update" }
+          ]
+        },
+        "result-amnezia-block": {
+          title: "Для YouTube, Instagram и похожих сайтов проверьте AmneziaWG и DNS",
+          summary: "Если перестал работать целый блок сайтов, проблема может быть в AmneziaWG, DNS или маршрутизации Podkop.",
+          steps: [
+            "Откройте раздел про AmneziaWG.",
+            "Проверьте диагностику Podkop.",
+            "Если часть сайтов открывается странно, обновите DNS в Podkop.",
+            "После изменений перезапустите сервис."
+          ],
+          links: [
+            { label: "YouTube, Instagram и другие сайты", href: "#amnezia" },
+            { label: "Обновить DNS в podkop", href: "#podkop-dns-update" },
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" }
+          ],
+          help: true
+        },
+        "result-proxy-format": {
+          title: "Ссылка работает, значит проверьте формат в Podkop",
+          summary: "Если VLESS/SS работает в другом клиенте, но не в Podkop, чаще всего проблема в формате ссылки или Outbound Configuration.",
+          steps: [
+            "Скопируйте ссылку заново без пробелов и переносов.",
+            "Проверьте Outbound Configuration.",
+            "Попробуйте заведомо рабочую ссылку.",
+            "После изменения перезапустите Podkop и проверьте диагностику."
+          ],
+          links: [
+            { label: "Свой VPN", href: "#custom-vpn" },
+            { label: "Несколько VLESS VPN", href: "#some-vless-vpn" },
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" }
+          ],
+          help: true
+        },
+        "result-proxy-dead": {
+          title: "VPN/прокси-ссылка не работает сама по себе",
+          summary: "Если ссылка не работает нигде, Podkop тут не главный подозреваемый: сначала нужна рабочая конфигурация.",
+          steps: [
+            "Проверьте ссылку в другом клиенте.",
+            "Уточните у поставщика VPN, активна ли конфигурация.",
+            "Затем добавьте рабочую ссылку в Podkop."
+          ],
+          links: [
+            { label: "Свой VPN", href: "#custom-vpn" },
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" }
+          ]
+        },
+        "result-tunnel-broken": {
+          title: "Похоже, не поднимается сам туннель",
+          summary: "Если WireGuard, AmneziaWG или OpenVPN не дает внешний IP, сначала проверяйте конфигурацию туннеля.",
+          steps: [
+            "Проверьте ключи, адрес сервера и доступность VPN.",
+            "Откройте раздел AmneziaWG или свой VPN.",
+            "После исправления перезапустите сервис.",
+            "Затем вернитесь в диагностику Podkop."
+          ],
+          links: [
+            { label: "AmneziaWG", href: "#amnezia" },
+            { label: "Свой VPN", href: "#custom-vpn" },
+            { label: "Диагностика podkop и VPN", href: "#podkop-diagnostics" }
+          ],
+          advanced: {
+            intro: "Global Check поможет увидеть, на каком этапе ломается проверка.",
+            commands: [
+              "/usr/bin/podkop global_check"
+            ]
+          },
+          help: true
+        },
+        "result-xbox-dns": {
+          title: "Для Xbox начните с DNS",
+          summary: "У Xbox часто отдельный сценарий: прописываем DNS и проверяем IPv4/Bootstrap.",
+          steps: [
+            "Откройте раздел DNS для Xbox.",
+            "Проверьте DNS и Bootstrap DNS.",
+            "Переподключите приставку к сети.",
+            "Если нужно пустить все через VPN, используйте сценарий полного трафика."
+          ],
+          links: [
+            { label: "DNS для Xbox", href: "#xbox-dns" },
+            { label: "Весь трафик через VPN", href: "#full-vpn" }
+          ]
+        },
+        "result-full-vpn": {
+          title: "Для приставки или ТВ может понадобиться весь трафик через VPN",
+          summary: "Когда неизвестно, какой домен добавить в Podkop, проще направить конкретное устройство целиком через VPN.",
+          steps: [
+            "Найдите устройство в списке клиентов.",
+            "Закрепите за ним IP.",
+            "Настройте маршрут всего трафика этого устройства через VPN.",
+            "Переподключите устройство к Wi-Fi."
+          ],
+          links: [
+            { label: "Весь трафик через VPN", href: "#full-vpn" },
+            { label: "Закрепить IP устройства", href: "#static-lease" }
+          ]
+        },
+        "result-static-lease": {
+          title: "Сначала закрепите IP устройства",
+          summary: "Закрепленный IP нужен, чтобы правила для ТВ, приставки или умного устройства не сбивались.",
+          steps: [
+            "Найдите устройство в списке клиентов.",
+            "Закрепите IP рядом с этим устройством.",
+            "Примените настройки.",
+            "Переподключите устройство к сети."
+          ],
+          links: [
+            { label: "Закрепить IP устройства", href: "#static-lease" },
+            { label: "Весь трафик через VPN", href: "#full-vpn" }
+          ]
+        },
+        "result-backup": {
+          title: "Сделайте backup перед серьезными изменениями",
+          summary: "Резервная копия поможет вернуться к рабочей конфигурации после неудачной настройки или reset.",
+          steps: [
+            "Скачайте архив настроек.",
+            "Переименуйте файл понятно.",
+            "Храните backup отдельно от роутера.",
+            "Не восстанавливайте backup от другой модели без необходимости."
+          ],
+          links: [
+            { label: "Резервная копия и восстановление", href: "#backup-restore" }
+          ]
+        },
+        "result-admin-password-change": {
+          title: "Смените пароль root в разделе администрирования",
+          summary: "Это лучше сделать после первичной настройки, чтобы доступ к роутеру был защищен.",
+          steps: [
+            "Откройте раздел администрирования.",
+            "Задайте новый пароль root.",
+            "Сохраните пароль в надежном месте.",
+            "После смены проверьте вход в админку."
+          ],
+          links: [
+            { label: "Пароль администратора", href: "#admin-password" }
+          ]
+        }
+      };
+
+      function openDiagnostic() {
+        diagnosticLastFocus = document.activeElement;
+        diagnosticCurrentId = "start";
+        diagnosticHistory = [];
+        diagnosticPopup.classList.add("is-open");
+        diagnosticPopup.setAttribute("aria-hidden", "false");
+        document.body.classList.add("diagnostic-popup-open");
+        renderDiagnostic();
+      }
+
+      function closeDiagnostic() {
+        diagnosticPopup.classList.remove("is-open");
+        diagnosticPopup.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("diagnostic-popup-open");
+        if (diagnosticLastFocus && typeof diagnosticLastFocus.focus === "function") {
+          diagnosticLastFocus.focus();
+        }
+      }
+
+      function renderDiagnostic() {
+        const isResult = Boolean(diagnosticResults[diagnosticCurrentId]);
+        const stepNumber = Math.min(diagnosticHistory.length + 1, 4);
+        const progress = isResult ? 100 : Math.max(24, stepNumber * 24);
+
+        diagnosticStep.textContent = isResult ? "Результат" : "Шаг " + stepNumber + " из 4";
+        diagnosticProgressBar.style.width = progress + "%";
+        diagnosticBack.disabled = diagnosticHistory.length === 0;
+
+        if (isResult) {
+          renderDiagnosticResult(diagnosticResults[diagnosticCurrentId]);
+        } else {
+          renderDiagnosticQuestion(diagnosticQuestions[diagnosticCurrentId] || diagnosticQuestions.start);
+        }
+
+        window.setTimeout(function () {
+          diagnosticBody.focus();
+        }, 0);
+      }
+
+      function renderDiagnosticQuestion(question) {
+        diagnosticBody.innerHTML = "";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "diagnostic-question";
+
+        const title = document.createElement("h3");
+        title.textContent = question.title;
+        wrapper.append(title);
+
+        if (question.hint) {
+          const hint = document.createElement("p");
+          hint.className = "diagnostic-question__hint";
+          hint.textContent = question.hint;
+          wrapper.append(hint);
+        }
+
+        const options = document.createElement("div");
+        options.className = "diagnostic-options";
+        question.options.forEach(function (option) {
+          const button = document.createElement("button");
+          button.className = "diagnostic-option";
+          button.type = "button";
+          button.textContent = option.label;
+          button.addEventListener("click", function () {
+            diagnosticHistory.push(diagnosticCurrentId);
+            diagnosticCurrentId = option.next;
+            renderDiagnostic();
+          });
+          options.append(button);
+        });
+
+        wrapper.append(options);
+        diagnosticBody.append(wrapper);
+      }
+
+      function renderDiagnosticResult(result) {
+        diagnosticBody.innerHTML = "";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "diagnostic-result";
+
+        const title = document.createElement("h3");
+        title.textContent = result.title;
+        wrapper.append(title);
+
+        const summary = document.createElement("p");
+        summary.className = "diagnostic-result__summary";
+        summary.textContent = result.summary;
+        wrapper.append(summary);
+
+        if (result.steps && result.steps.length) {
+          const steps = document.createElement("ol");
+          steps.className = "diagnostic-result__steps";
+          result.steps.forEach(function (step) {
+            const item = document.createElement("li");
+            item.textContent = step;
+            steps.append(item);
+          });
+          wrapper.append(steps);
+        }
+
+        if (result.links && result.links.length) {
+          const actions = document.createElement("div");
+          actions.className = "diagnostic-result__actions";
+          result.links.forEach(function (linkData) {
+            const link = document.createElement("a");
+            link.className = "diagnostic-result__link";
+            link.href = linkData.href;
+            link.textContent = linkData.label;
+            link.addEventListener("click", function (e) {
+              const target = document.querySelector(linkData.href);
+              if (!target) return;
+              e.preventDefault();
+              if (tocSearch && tocSearch.value) {
+                tocSearch.value = "";
+                updateSearch();
+              }
+              closeDiagnostic();
+              window.history.pushState(null, "", linkData.href);
+              target.scrollIntoView({ behavior: "smooth", block: "start" });
+              target.focus({ preventScroll: true });
+            });
+            actions.append(link);
+          });
+          wrapper.append(actions);
+        }
+
+        if (result.advanced) {
+          const advanced = document.createElement("details");
+          advanced.className = "diagnostic-advanced";
+          const summaryNode = document.createElement("summary");
+          summaryNode.textContent = "Расширенная проверка на ПК";
+          advanced.append(summaryNode);
+
+          if (result.advanced.intro) {
+            const intro = document.createElement("p");
+            intro.textContent = result.advanced.intro;
+            advanced.append(intro);
+          }
+
+          result.advanced.commands.forEach(function (command) {
+            const row = document.createElement("div");
+            row.className = "diagnostic-command";
+            const code = document.createElement("code");
+            code.textContent = command;
+            const copyButton = document.createElement("button");
+            copyButton.type = "button";
+            copyButton.textContent = "Скопировать";
+            copyButton.setAttribute("data-diagnostic-copy", command);
+            row.append(code, copyButton);
+            advanced.append(row);
+          });
+
+          wrapper.append(advanced);
+        }
+
+        if (result.help) {
+          const checklist = document.createElement("div");
+          checklist.className = "diagnostic-checklist";
+          checklist.innerHTML = "<p><strong>Что подготовить для помощи:</strong> скриншот вкладки «Диагностика», результат Global Check, логи Podkop, что ожидали и что произошло.</p>";
+          wrapper.append(checklist);
+        }
+
+        const contact = document.createElement("a");
+        contact.className = "diagnostic-result__contact";
+        contact.href = resolveConfiguredLink(appConfig.telegramLinks, "https://t.me/nikishkindan");
+        contact.target = "_blank";
+        contact.rel = "noopener noreferrer";
+        contact.textContent = "Связаться в Telegram";
+        wrapper.append(contact);
+
+        diagnosticBody.append(wrapper);
+      }
+
+      diagnosticOpenButtons.forEach(function (button) {
+        button.addEventListener("click", openDiagnostic);
+      });
+
+      diagnosticClose.addEventListener("click", closeDiagnostic);
+      diagnosticPopup.addEventListener("click", function (e) {
+        if (e.target === diagnosticPopup) closeDiagnostic();
+      });
+
+      diagnosticBack.addEventListener("click", function () {
+        const previous = diagnosticHistory.pop();
+        if (!previous) return;
+        diagnosticCurrentId = previous;
+        renderDiagnostic();
+      });
+
+      diagnosticRestart.addEventListener("click", function () {
+        diagnosticCurrentId = "start";
+        diagnosticHistory = [];
+        renderDiagnostic();
+      });
+
+      diagnosticBody.addEventListener("click", function (e) {
+        const copyButton = e.target.closest("[data-diagnostic-copy]");
+        if (!copyButton) return;
+        const defaultText = copyButton.textContent;
+        copyText(copyButton.getAttribute("data-diagnostic-copy")).then(function () {
+          copyButton.textContent = "Скопировано";
+          window.setTimeout(function () {
+            copyButton.textContent = defaultText;
+          }, 1600);
+        }).catch(function () {
+          copyButton.textContent = "Не скопировано";
+          window.setTimeout(function () {
+            copyButton.textContent = defaultText;
+          }, 1600);
+        });
+      });
+
+      diagnosticPopup.addEventListener("keydown", function (e) {
+        if (e.key !== "Tab") return;
+        const focusable = Array.from(diagnosticPopup.querySelectorAll("a[href], button:not([disabled]), summary, [tabindex]:not([tabindex='-1'])"))
+          .filter(function (element) {
+            return element.offsetParent !== null;
+          });
+        if (!focusable.length) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && diagnosticPopup.classList.contains("is-open")) {
+          closeDiagnostic();
+        }
+      });
 
       document.querySelectorAll("[data-copy-value], [data-copy-target]").forEach(function (button) {
         const defaultText = button.textContent;
