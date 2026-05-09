@@ -1,0 +1,25 @@
+{
+  "name": "Инструкция OpenWrt",
+  "short_name": "OpenWrt",
+  "description": "Пошаговая инструкция по настройке роутера с OpenWrt, Wi-Fi, VPN, podkop и AmneziaWG.",
+  "lang": "ru-RU",
+  "start_url": "https://altiqo.github.io/instructions_openwrt_routers_avito/",
+  "scope": "https://altiqo.github.io/instructions_openwrt_routers_avito/",
+  "display": "standalone",
+  "background_color": "#080b12",
+  "theme_color": "#080b12",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/images/og-openwrt-guide.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

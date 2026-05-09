@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://altiqo.github.io/instructions_openwrt_routers_avito/sitemap.xml
